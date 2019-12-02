@@ -13,7 +13,6 @@ const PORT = process.env.PORT || 3001
 
 //Instancias
 const app = express()
-require('./config/db')
 
 //Utils
 const _util_error = require('./utils/error.util')
@@ -23,11 +22,17 @@ app.use(cors())
 app.use(express.json())
 app.use(helmet())
 
+//Database
+require('./config/db')
+
 //Routes
 app.use('/', router)
 
 /* MANEJO DE ERRORES DE EXPRESS */
 app.use(_util_error.errorHandler)
+
+//Sockets
+// require('./io/chat.io')
 
 app.listen(PORT, () => {
   console.log(`Servidor iniciado en el puerto: ${PORT}`)

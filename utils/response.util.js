@@ -24,10 +24,8 @@ function getResponse(code, iso = process.env.ISO) {
 
   let response = listResponses.find(res => res.code == code)
 
-  if (response && response.message && response.message.lenth > 0) {
-    let msjRes = response.message.find(msj => msj.iso == iso)
-    if (msjRes && msjRes.text) message = msjRes.text
-  }
+  let msjRes = response.message.find(msj => msj.iso == iso)
+  if (msjRes && msjRes.text) message = msjRes.text
 
   return message
 }

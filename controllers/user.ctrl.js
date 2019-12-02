@@ -7,6 +7,9 @@
 //Modules
 const mongoose = require('mongoose')
 
+//Instanciar el modelo
+const User = require('../models/user')
+
 //Utils
 const _util_response = require('../utils/response.util')
 const _util_security = require('../utils/security.util')
@@ -32,6 +35,11 @@ async function create(req, res, next) {
 
     if (!data.password || data.password == '') {
       data.password = '12345'
+    }
+
+    //En caso de que no venga un rol, se le asigna el rol mas bajo
+    if (!data.role) {
+      data.role = 'auditor'
     }
 
     //Encriptamos la clave
@@ -160,6 +168,10 @@ async function edit(req, res, next) {
     let userId = req.params.id
     let changes = req.body
 
+    //Eliminamos los createdAt y updatedAt
+    delete changes.createdAt
+    delete changes.updatedAt
+
     // Verificar si existe dicho id
     let user = await mongoose.model('Users').findById(userId)
 
@@ -169,6 +181,14 @@ async function edit(req, res, next) {
         data: null,
         error: _util_response.getResponse(6, req.headers.iso)
       })
+    }
+
+    //Verificamos si cambio la contraseña
+    if (changes && changes.password) {
+      if (changes.password != user.password) {
+        //Encriptamos la clave
+        changes.password = _util_security.encryptPassword(changes.password)
+      }
     }
 
     let userUpdate = await mongoose

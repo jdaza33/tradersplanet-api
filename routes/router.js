@@ -12,8 +12,13 @@ const router = express.Router()
 
 //Controllers
 const userCtrl = require('../controllers/user.ctrl')
+const lessonCtrl = require('../controllers/lesson.ctrl')
+const educationCtrl = require('../controllers/education.ctrl')
+const postCtrl = require('../controllers/post.ctrl')
+const serviceCtrl = require('../controllers/service.ctrl')
+const testimonyCtrl = require('../controllers/testimony.ctrl')
 
-/**Users */
+/** Users */
 router.post('/users/create', userCtrl.create)
 router.post('/users/list', userCtrl.list)
 router.get('/users/:id', userCtrl.get)
@@ -21,7 +26,42 @@ router.put('/users/:id', userCtrl.edit)
 router.delete('/users/:id', userCtrl.del)
 router.post('/users/login', userCtrl.login)
 
-/**Middleware - Devuelve un error 404 si la ruta solicitada no está definida */
+/** Lessons */
+router.post('/lessons/create', lessonCtrl.create)
+router.post('/lessons/list', lessonCtrl.list)
+router.get('/lessons/:id', lessonCtrl.get)
+router.put('/lessons/:id', lessonCtrl.edit)
+router.delete('/lessons/:id', lessonCtrl.del)
+
+/** Educations */
+router.post('/educations/create', educationCtrl.create)
+router.post('/educations/list', educationCtrl.list)
+router.get('/educations/:id', educationCtrl.get)
+router.put('/educations/:id', educationCtrl.edit)
+router.delete('/educations/:id', educationCtrl.del)
+
+/** Posts */
+router.post('/posts/create', postCtrl.create)
+router.post('/posts/list', postCtrl.list)
+router.get('/posts/:id', postCtrl.get)
+router.put('/posts/:id', postCtrl.edit)
+router.delete('/posts/:id', postCtrl.del)
+
+/** Services */
+router.post('/services/create', serviceCtrl.create)
+router.post('/services/list', serviceCtrl.list)
+router.get('/services/:id', serviceCtrl.get)
+router.put('/services/:id', serviceCtrl.edit)
+router.delete('/services/:id', serviceCtrl.del)
+
+/** Testimonies */
+router.post('/testimonies/create', testimonyCtrl.create)
+router.post('/testimonies/list', testimonyCtrl.list)
+router.get('/testimonies/:id', testimonyCtrl.get)
+router.put('/testimonies/:id', testimonyCtrl.edit)
+router.delete('/testimonies/:id', testimonyCtrl.del)
+
+/** Middleware - Devuelve un error 404 si la ruta solicitada no está definida */
 router.use('*', (req, res) => {
   return res.status(404).send({
     success: 0,

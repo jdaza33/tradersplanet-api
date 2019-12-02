@@ -21,7 +21,8 @@
     "mongoose-timestamp": "^0.6.0",
     "morgan": "^1.9.1",
     "path": "^0.12.7",
-    "promise-fs": "^2.1.1"
+    "promise-fs": "^2.1.1",
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.4"

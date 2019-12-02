@@ -115,5 +115,329 @@
         "text": "El email del usuario no existe."
       }
     ]
+  },
+  {
+    "code": 13,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "El email del usuario no existe."
+      }
+    ]
+  },
+  {
+    "code": 14,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Clase creada con éxito."
+      }
+    ]
+  },
+  {
+    "code": 15,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Clase editada con éxito."
+      }
+    ]
+  },
+  {
+    "code": 16,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Clase eliminada con éxito."
+      }
+    ]
+  },
+  {
+    "code": 17,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Clase obtenida con éxito."
+      }
+    ]
+  },
+  {
+    "code": 18,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Clases listadas con éxito."
+      }
+    ]
+  },
+  {
+    "code": 19,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "El identificador de la clase no existe."
+      }
+    ]
+  },
+  {
+    "code": 20,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Lista de clases vacia."
+      }
+    ]
+  },
+  {
+    "code": 21,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Testimonio creado con éxito."
+      }
+    ]
+  },
+  {
+    "code": 22,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Testimonio editado con éxito."
+      }
+    ]
+  },
+  {
+    "code": 23,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Testimonio eliminado con éxito."
+      }
+    ]
+  },
+  {
+    "code": 24,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Testimonio obtenido con éxito."
+      }
+    ]
+  },
+  {
+    "code": 25,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Testimonios listados con éxito."
+      }
+    ]
+  },
+  {
+    "code": 26,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "El identificador del testimonio no existe."
+      }
+    ]
+  },
+  {
+    "code": 27,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Lista de testimonios vacia."
+      }
+    ]
+  },
+  {
+    "code": 28,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Articulo creado con éxito."
+      }
+    ]
+  },
+  {
+    "code": 29,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Articulo editado con éxito."
+      }
+    ]
+  },
+  {
+    "code": 30,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Articulo eliminado con éxito."
+      }
+    ]
+  },
+  {
+    "code": 31,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Articulo obtenido con éxito."
+      }
+    ]
+  },
+  {
+    "code": 32,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Articulos listados con éxito."
+      }
+    ]
+  },
+  {
+    "code": 33,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "El identificador del articulo no existe."
+      }
+    ]
+  },
+  {
+    "code": 34,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Lista de articulos vacia."
+      }
+    ]
+  },
+  {
+    "code": 35,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Curso creado con éxito."
+      }
+    ]
+  },
+  {
+    "code": 36,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Curso editado con éxito."
+      }
+    ]
+  },
+  {
+    "code": 37,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Curso eliminado con éxito."
+      }
+    ]
+  },
+  {
+    "code": 38,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Curso obtenido con éxito."
+      }
+    ]
+  },
+  {
+    "code": 39,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Cursos listados con éxito."
+      }
+    ]
+  },
+  {
+    "code": 40,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "El identificador del curso no existe."
+      }
+    ]
+  },
+  {
+    "code": 41,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Lista de cursos vacia."
+      }
+    ]
+  },
+  {
+    "code": 42,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Servicio creado con éxito."
+      }
+    ]
+  },
+  {
+    "code": 43,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Servicio editado con éxito."
+      }
+    ]
+  },
+  {
+    "code": 44,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Servicio eliminado con éxito."
+      }
+    ]
+  },
+  {
+    "code": 45,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Servicio obtenido con éxito."
+      }
+    ]
+  },
+  {
+    "code": 46,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Servicios listados con éxito."
+      }
+    ]
+  },
+  {
+    "code": 47,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "El identificador del servicio no existe."
+      }
+    ]
+  },
+  {
+    "code": 48,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Lista de servicios vacia."
+      }
+    ]
   }
 ]
