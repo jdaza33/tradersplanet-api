@@ -87,7 +87,10 @@ async function list(req, res, next) {
   try {
     let filters = req.body
 
-    let lessons = await mongoose.model('Lessons').find(filters)
+    let lessons = await mongoose
+      .model('Lessons')
+      .find(filters)
+      .populate({ path: 'tutor', select: '_id name photo' })
 
     if (lessons.length === 0) {
       return res.status(200).send({
