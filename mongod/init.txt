@@ -1,0 +1,9 @@
+config = { _id: "rs", members:[
+          { _id : 0, host : "localhost:27018"},
+          { _id : 1, host : "localhost:27019"},
+          { _id : 2, host : "localhost:27020"} ]
+};
+
+$ mongod --config /home/fbase.tv/mongod/rs1/mongod.conf
+$ mongod --config /home/fbase.tv/mongod/rs2/mongod.conf
+$ mongod --config /home/fbase.tv/mongod/rs3/mongod.conf

@@ -20,7 +20,8 @@ module.exports = {
   list,
   del,
   edit,
-  login
+  login,
+  setPhoto
 }
 
 /**
@@ -264,6 +265,32 @@ async function login(req, res, next) {
       data: { user, token },
       error: null,
       message: _util_response.getResponse(8, req.headers.iso)
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+async function setPhoto(req, res, next) {
+  try {
+    let userId = req.params.id
+    let file = req.file
+
+    await mongoose
+      .model('Users')
+      .findByIdAndUpdate(userId, { photo: file.filename })
+
+    return res.status(200).send({
+      success: 1,
+      data: null,
+      error: null,
+      message: _util_response.getResponse(2, req.headers.iso)
     })
   } catch (error) {
     next(error)

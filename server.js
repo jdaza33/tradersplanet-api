@@ -7,6 +7,8 @@ const express = require('express')
 const cors = require('cors')
 const helmet = require('helmet')
 const router = require('./routes/router')
+const mkdirp = require('mkdirp')
+const path = require('path')
 
 //Constantes
 const PORT = process.env.PORT || 3001
@@ -16,6 +18,9 @@ const app = express()
 
 //Utils
 const _util_error = require('./utils/error.util')
+
+//Creando carpeta files/ si no existe
+mkdirp.sync(path.join(__dirname, 'files/'))
 
 //Middlewares
 app.use(cors())

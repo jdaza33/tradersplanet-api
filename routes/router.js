@@ -6,6 +6,8 @@
 
 //Modules
 const express = require('express')
+const fsp = require('promise-fs')
+const mime = require('mime')
 
 //Constantes
 const router = express.Router()
@@ -18,6 +20,24 @@ const postCtrl = require('../controllers/post.ctrl')
 const serviceCtrl = require('../controllers/service.ctrl')
 const testimonyCtrl = require('../controllers/testimony.ctrl')
 
+//Multer
+const multer = require('multer')
+const path = require('path')
+const _folderUploads = path.join(__dirname, '../files/')
+
+// Storage para subir los archivos
+let storageFile = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, _folderUploads)
+  },
+  filename: (req, file, cb) => {
+    let ext = file.originalname.split('.')
+    ext = ext[ext.length - 1]
+    cb(null, `file_${Date.now()}.${ext}`)
+  }
+})
+let _upload = multer({ storage: storageFile })
+
 /** Users */
 router.post('/users/create', userCtrl.create)
 router.post('/users/list', userCtrl.list)
@@ -25,6 +45,11 @@ router.get('/users/:id', userCtrl.get)
 router.put('/users/:id', userCtrl.edit)
 router.delete('/users/:id', userCtrl.del)
 router.post('/users/login', userCtrl.login)
+router.post(
+  '/users/upload/photo/:id',
+  _upload.single('file'),
+  userCtrl.setPhoto
+)
 
 /** Lessons */
 router.post('/lessons/create', lessonCtrl.create)
@@ -60,6 +85,22 @@ router.post('/testimonies/list', testimonyCtrl.list)
 router.get('/testimonies/:id', testimonyCtrl.get)
 router.put('/testimonies/:id', testimonyCtrl.edit)
 router.delete('/testimonies/:id', testimonyCtrl.del)
+
+/** Uploads */
+router.get('/file/:name', async (req, res, next) => {
+  try {
+    let name = req.params.name
+    let file = path.join(__dirname, `../files/${name}`)
+    let data = await fsp.readFile(file)
+    let ext = name.split('.')
+    ext = ext[ext.length - 1]
+    res.contentType(mime.getType(ext))
+    return res.send(data)
+  } catch (error) {
+    console.log('Error al consultar archivo')
+    next(error)
+  }
+})
 
 /** Middleware - Devuelve un error 404 si la ruta solicitada no está definida */
 router.use('*', (req, res) => {
