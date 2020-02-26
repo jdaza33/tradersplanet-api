@@ -4,6 +4,6 @@ config = { _id: "rs", members:[
           { _id : 2, host : "localhost:27020"} ]
 };
 
-$ mongod --config /home/fbase.tv/mongod/rs1/mongod.conf
-$ mongod --config /home/fbase.tv/mongod/rs2/mongod.conf
-$ mongod --config /home/fbase.tv/mongod/rs3/mongod.conf
+$ mongod --config /home/ubuntu/mongod/rs1/mongod.conf
+$ mongod --config /home/ubuntu/mongod/rs2/mongod.conf
+$ mongod --config /home/ubuntu/mongod/rs3/mongod.conf
