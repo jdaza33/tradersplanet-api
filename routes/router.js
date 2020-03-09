@@ -50,7 +50,7 @@ router.post(
   _upload.single('file'),
   userCtrl.setPhoto
 )
-router.get('/users/pay/course/:id/:courseId', userCtrl.payCourse)
+router.put('/users/pay/course/:id/:courseId', userCtrl.payCourse)
 
 /** Lessons */
 router.post('/lessons/create', lessonCtrl.create)
