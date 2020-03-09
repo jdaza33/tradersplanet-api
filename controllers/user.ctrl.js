@@ -21,7 +21,8 @@ module.exports = {
   del,
   edit,
   login,
-  setPhoto
+  setPhoto,
+  payCourse
 }
 
 /**
@@ -284,13 +285,51 @@ async function setPhoto(req, res, next) {
 
     await mongoose
       .model('Users')
-      .findByIdAndUpdate(userId, { photo: file.filename })
+      .findByIdAndUpdate(userId, { photo: `${process.env.ULR}/file/${fil.filename}` })
 
     return res.status(200).send({
       success: 1,
       data: null,
       error: null,
       message: _util_response.getResponse(2, req.headers.iso)
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+async function payCourse(req, res, next) {
+  try {
+    let userId = req.params.id
+    let courseId = req.params.courseId
+
+    // Verificar si existe dicho id
+    let user = await mongoose.model('Users').findById(userId)
+
+    if (!user) {
+      return res.status(403).send({
+        success: 0,
+        data: null,
+        error: _util_response.getResponse(6, req.headers.iso)
+      })
+    }
+
+    // Eliminamos
+    await mongoose.model('Users').findByIdAndUpdate(userId, {
+      $push: { paidcourses: courseId }
+    })
+
+    return res.status(200).send({
+      success: 1,
+      data: { user },
+      error: null,
+      message: _util_response.getResponse(3, req.headers.iso)
     })
   } catch (error) {
     next(error)

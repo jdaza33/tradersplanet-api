@@ -12,7 +12,7 @@ module.exports = {
  * @param {*} req 
  * @param {*} res 
  */
-async function errorHandler(err, req, res) {
+function errorHandler(err, req, res, next) {
   console.log(err)
   return res.status(500).json({
     success: 0,
