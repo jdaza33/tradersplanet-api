@@ -285,7 +285,7 @@ async function setPhoto(req, res, next) {
 
     await mongoose
       .model('Users')
-      .findByIdAndUpdate(userId, { photo: `${process.env.ULR}/file/${fil.filename}` })
+      .findByIdAndUpdate(userId, { photo: `${process.env.ULR}/file/${file.filename}` })
 
     return res.status(200).send({
       success: 1,
