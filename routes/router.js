@@ -65,6 +65,11 @@ router.post('/educations/list', educationCtrl.list)
 router.get('/educations/:id', educationCtrl.get)
 router.put('/educations/:id', educationCtrl.edit)
 router.delete('/educations/:id', educationCtrl.del)
+router.post(
+  '/educations/upload/img/:id',
+  _upload.single('file'),
+  educationCtrl.setImg
+)
 
 /** Posts */
 router.post('/posts/create', postCtrl.create)
@@ -72,6 +77,11 @@ router.post('/posts/list', postCtrl.list)
 router.get('/posts/:id', postCtrl.get)
 router.put('/posts/:id', postCtrl.edit)
 router.delete('/posts/:id', postCtrl.del)
+router.post(
+  '/posts/upload/background/:id',
+  _upload.single('file'),
+  postCtrl.setBackground
+)
 
 /** Services */
 router.post('/services/create', serviceCtrl.create)

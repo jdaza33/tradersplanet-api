@@ -71,7 +71,10 @@ async function get(req, res, next) {
   try {
     let userId = req.params.id
 
-    let user = await mongoose.model('Users').findById(userId)
+    let user = await mongoose
+      .model('Users')
+      .findById(userId)
+      .populate({ path: 'paidcourses' })
 
     if (!user) {
       return res.status(403).send({
@@ -103,7 +106,10 @@ async function list(req, res, next) {
   try {
     let filters = req.body
 
-    let users = await mongoose.model('Users').find(filters)
+    let users = await mongoose
+      .model('Users')
+      .find(filters)
+      .populate({ path: 'paidcourses' })
 
     if (users.length === 0) {
       return res.status(200).send({
@@ -283,9 +289,9 @@ async function setPhoto(req, res, next) {
     let userId = req.params.id
     let file = req.file
 
-    await mongoose
-      .model('Users')
-      .findByIdAndUpdate(userId, { photo: `${process.env.ULR}/file/${file.filename}` })
+    await mongoose.model('Users').findByIdAndUpdate(userId, {
+      photo: `${process.env.ULR}/file/${file.filename}`
+    })
 
     return res.status(200).send({
       success: 1,

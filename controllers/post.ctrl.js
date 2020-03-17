@@ -15,7 +15,8 @@ module.exports = {
   get,
   list,
   del,
-  edit
+  edit,
+  setBackground
 }
 
 /**
@@ -51,7 +52,13 @@ async function get(req, res, next) {
   try {
     let postId = req.params.id
 
-    let post = await mongoose.model('Posts').findById(postId)
+    let post = await mongoose
+      .model('Posts')
+      .findById(postId)
+      .populate({
+        path: 'author',
+        select: '_id name lastname ocupation email role'
+      })
 
     if (!post) {
       return res.status(403).send({
@@ -83,7 +90,13 @@ async function list(req, res, next) {
   try {
     let filters = req.body
 
-    let posts = await mongoose.model('Posts').find(filters)
+    let posts = await mongoose
+      .model('Posts')
+      .find(filters)
+      .populate({
+        path: 'author',
+        select: '_id name lastname ocupation email role'
+      })
 
     if (posts.length === 0) {
       return res.status(200).send({
@@ -170,6 +183,32 @@ async function edit(req, res, next) {
       data: { post: postUpdated },
       error: null,
       message: _util_response.getResponse(29, req.headers.iso)
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+async function setBackground(req, res, next) {
+  try {
+    let postId = req.params.id
+    let file = req.file
+
+    await mongoose.model('Posts').findByIdAndUpdate(postId, {
+      background: `${process.env.ULR}/file/${file.filename}`
+    })
+
+    return res.status(200).send({
+      success: 1,
+      data: null,
+      error: null,
+      message: _util_response.getResponse(2, req.headers.iso)
     })
   } catch (error) {
     next(error)

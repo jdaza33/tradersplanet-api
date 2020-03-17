@@ -18,7 +18,8 @@ module.exports = {
   get,
   list,
   del,
-  edit
+  edit,
+  setImg
 }
 
 /**
@@ -54,7 +55,10 @@ async function get(req, res, next) {
   try {
     let educationId = req.params.id
 
-    let education = await mongoose.model('Educations').findById(educationId)
+    let education = await mongoose
+      .model('Educations')
+      .findById(educationId)
+      .populate({ path: 'tutor', select: '_id name ocupation email role' })
 
     if (!education) {
       return res.status(403).send({
@@ -86,7 +90,10 @@ async function list(req, res, next) {
   try {
     let filters = req.body
 
-    let educations = await mongoose.model('Educations').find(filters)
+    let educations = await mongoose
+      .model('Educations')
+      .find(filters)
+      .populate({ path: 'tutor', select: '_id name ocupation email role' })
 
     if (educations.length === 0) {
       return res.status(200).send({
@@ -173,6 +180,32 @@ async function edit(req, res, next) {
       data: { education: educationUpdated },
       error: null,
       message: _util_response.getResponse(36, req.headers.iso)
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+async function setImg(req, res, next) {
+  try {
+    let educationId = req.params.id
+    let file = req.file
+
+    await mongoose.model('Educations').findByIdAndUpdate(educationId, {
+      img: `${process.env.ULR}/file/${file.filename}`
+    })
+
+    return res.status(200).send({
+      success: 1,
+      data: null,
+      error: null,
+      message: _util_response.getResponse(2, req.headers.iso)
     })
   } catch (error) {
     next(error)

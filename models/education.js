@@ -10,12 +10,16 @@ const Schema = mongoose.Schema
 const Education = new Schema({
   title: { type: String, trim: true },
   content: { type: String, trim: true },
-  tutor: { type: String, trim: true },
-  published: Boolean,
+  tutor: { type: String, trim: true, ref: 'Users' },
+  published: {type: Boolean, default: false},
   price: Number,
-  offprice: Number,
+  offprice: { type: Number, default: 0 },
+  short_description: String,
+  large_description: String,
+  learn: String,
   img: String,
-  temary: String
+  tags: [String],
+  requirements: [String]
 })
 
 Education.plugin(timestamp)
