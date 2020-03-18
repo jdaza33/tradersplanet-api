@@ -16,7 +16,6 @@ mongoose.connect(
     if (err) {
       console.log(`Error al conectar a la base de datos: ${err}`)
     }
-    require('../utils/scripts/insertBlogs')
     console.log(`Conectando a la base de datos --> ${MONGO_URL}`)
   }
 )

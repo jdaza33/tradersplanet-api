@@ -7,6 +7,9 @@
 //Modules
 const mongoose = require('mongoose')
 
+//Models
+const Post = require('../models/post')
+
 //Utils
 const _util_response = require('../utils/response.util')
 
@@ -29,7 +32,7 @@ async function create(req, res, next) {
   try {
     let data = req.body
 
-    let postCreated = await mongoose.model('Posts').create(data)
+    let postCreated = await Post.create(data)
 
     return res.status(200).send({
       success: 1,
@@ -52,13 +55,10 @@ async function get(req, res, next) {
   try {
     let postId = req.params.id
 
-    let post = await mongoose
-      .model('Posts')
-      .findById(postId)
-      .populate({
-        path: 'author',
-        select: '_id name lastname ocupation email role'
-      })
+    let post = await Post.findById(postId).populate({
+      path: 'author',
+      select: '_id name lastname ocupation email role'
+    })
 
     if (!post) {
       return res.status(403).send({
@@ -90,13 +90,10 @@ async function list(req, res, next) {
   try {
     let filters = req.body
 
-    let posts = await mongoose
-      .model('Posts')
-      .find(filters)
-      .populate({
-        path: 'author',
-        select: '_id name lastname ocupation email role'
-      })
+    let posts = await Post.find(filters).populate({
+      path: 'author',
+      select: '_id name lastname ocupation email role'
+    })
 
     if (posts.length === 0) {
       return res.status(200).send({
@@ -128,7 +125,7 @@ async function del(req, res, next) {
     let postId = req.params.id
 
     // Verificar si existe dicho id
-    let post = await mongoose.model('Posts').findById(postId)
+    let post = await Post.findById(postId)
 
     if (!post) {
       return res.status(403).send({
@@ -164,7 +161,7 @@ async function edit(req, res, next) {
     let changes = req.body
 
     // Verificar si existe dicho id
-    let post = await mongoose.model('Posts').findById(postId)
+    let post = await Post.findById(postId)
 
     if (!post) {
       return res.status(403).send({
@@ -200,7 +197,7 @@ async function setBackground(req, res, next) {
     let postId = req.params.id
     let file = req.file
 
-    await mongoose.model('Posts').findByIdAndUpdate(postId, {
+    await Post.findByIdAndUpdate(postId, {
       background: `${process.env.ULR}/file/${file.filename}`
     })
 
