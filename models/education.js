@@ -16,7 +16,7 @@ const Education = new Schema({
   offprice: { type: Number, default: 0 },
   short_description: String,
   large_description: String,
-  learn: String,
+  learn: [String],
   img: String,
   tags: [String],
   requirements: [String]

@@ -14,7 +14,8 @@ const Post = new Schema({
     author: { type: String, ref: 'Users' },
     tags: [String],
     background: String,
-    public: Boolean
+    public: Boolean,
+    class: String
 })
 
 Post.plugin(timestamp)
