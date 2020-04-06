@@ -18,12 +18,13 @@ const User = new Schema({
   role: {
     type: String,
     enum: ['superadmin', 'admin', 'auditor', 'publisher'],
-    required: true
+    required: true,
   },
   active: { type: Boolean, default: true, required: true },
+  subscription: { type: Boolean, default: false, required: false },
   gender: { type: String, enum: ['male', 'female'], required: false },
   photo: { type: String, required: false },
-  paidcourses: [{ type: String, required: false, ref: 'Educations' }]
+  paidcourses: [{ type: String, required: false, ref: 'Educations' }],
 })
 
 User.plugin(timestamp)
