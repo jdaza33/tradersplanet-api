@@ -10,9 +10,6 @@ const router = require('./routes/router')
 const mkdirp = require('mkdirp')
 const path = require('path')
 
-//Database
-require('./config/db')
-
 //Constantes
 const PORT = process.env.PORT || 3001
 
@@ -30,6 +27,8 @@ app.use(cors())
 app.use(express.json())
 app.use(helmet())
 
+//Database
+require('./config/db')
 
 //Routes
 app.use('/', router)
