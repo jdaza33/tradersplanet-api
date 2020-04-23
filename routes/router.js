@@ -97,6 +97,9 @@ router.get('/testimonies/:id', testimonyCtrl.get)
 router.put('/testimonies/:id', testimonyCtrl.edit)
 router.delete('/testimonies/:id', testimonyCtrl.del)
 
+/** Contact */
+router.post('/contact/create', testimonyCtrl.create)
+
 /** Uploads */
 router.get('/file/:name', async (req, res, next) => {
   try {

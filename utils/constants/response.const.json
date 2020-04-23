@@ -439,5 +439,14 @@
         "text": "Lista de servicios vacia."
       }
     ]
+  },
+  {
+    "code": 49,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Correo enviado con éxito."
+      }
+    ]
   }
 ]
