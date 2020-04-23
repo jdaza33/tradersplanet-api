@@ -19,6 +19,7 @@ const educationCtrl = require('../controllers/education.ctrl')
 const postCtrl = require('../controllers/post.ctrl')
 const serviceCtrl = require('../controllers/service.ctrl')
 const testimonyCtrl = require('../controllers/testimony.ctrl')
+const contactCtrl = require('../controllers/contact.ctrl')
 
 //Multer
 const multer = require('multer')
@@ -34,7 +35,7 @@ let storageFile = multer.diskStorage({
     let ext = file.originalname.split('.')
     ext = ext[ext.length - 1]
     cb(null, `file_${Date.now()}.${ext}`)
-  }
+  },
 })
 let _upload = multer({ storage: storageFile })
 
@@ -98,7 +99,7 @@ router.put('/testimonies/:id', testimonyCtrl.edit)
 router.delete('/testimonies/:id', testimonyCtrl.del)
 
 /** Contact */
-router.post('/contact/create', testimonyCtrl.create)
+router.post('/contact/create', contactCtrl.create)
 
 /** Uploads */
 router.get('/file/:name', async (req, res, next) => {
@@ -124,8 +125,8 @@ router.use('*', (req, res) => {
     error: {
       status: 404,
       type: 'Resource not found',
-      reason: 'Application does not support the requested path.'
-    }
+      reason: 'Application does not support the requested path.',
+    },
   })
 })
 
