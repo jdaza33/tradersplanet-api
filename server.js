@@ -25,6 +25,7 @@ mkdirp.sync(path.join(__dirname, 'files/'))
 //Middlewares
 app.use(cors())
 app.use(express.json())
+app.use(express.urlencoded())
 app.use(helmet())
 
 //Database

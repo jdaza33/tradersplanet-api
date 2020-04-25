@@ -448,5 +448,32 @@
         "text": "Correo enviado con éxito."
       }
     ]
+  },
+  {
+    "code": 50,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Audicencias de Malichimp insertadas con éxito."
+      }
+    ]
+  },
+  {
+    "code": 51,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Lista de audiencias obtenida con éxito."
+      }
+    ]
+  },
+  {
+    "code": 52,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Suscriptor agregado con éxito."
+      }
+    ]
   }
 ]

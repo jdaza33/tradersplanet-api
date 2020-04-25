@@ -20,6 +20,10 @@ const postCtrl = require('../controllers/post.ctrl')
 const serviceCtrl = require('../controllers/service.ctrl')
 const testimonyCtrl = require('../controllers/testimony.ctrl')
 const contactCtrl = require('../controllers/contact.ctrl')
+const mailchimpCtrl = require('../controllers/mailchimp.ctrl')
+const audienceCtrl = require('../controllers/audience.ctrl')
+const subscriberCtrl = require('../controllers/subscriber.ctrl')
+const webhookCtrl = require('../controllers/webhook.ctrl')
 
 //Multer
 const multer = require('multer')
@@ -100,6 +104,27 @@ router.delete('/testimonies/:id', testimonyCtrl.del)
 
 /** Contact */
 router.post('/contact/create', contactCtrl.create)
+
+/** Mailchimp */
+router.post('/mailchimp/insert/audiences', mailchimpCtrl.insertAudiences)
+
+/** Audiences */
+router.post('/audiences/list', audienceCtrl.list)
+
+/** Webhook */
+router.get('/webhook', (req, res, next) => {
+  try {
+    return res.status(200).json({ success: 1 })
+  } catch (error) {
+    console.log(error)
+    return res.status(403).json({ success: 0 })
+  }
+})
+router.post('/webhook', webhookCtrl.main)
+
+/** Subscribers */
+router.post('/subscribers/create', subscriberCtrl.create)
+router.post('/subscribers/list', subscriberCtrl.list)
 
 /** Uploads */
 router.get('/file/:name', async (req, res, next) => {
