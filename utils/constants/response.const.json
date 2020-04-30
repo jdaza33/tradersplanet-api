@@ -475,5 +475,14 @@
         "text": "Suscriptor agregado con éxito."
       }
     ]
+  },
+  {
+    "code": 53,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Contraseña restablecida."
+      }
+    ]
   }
 ]

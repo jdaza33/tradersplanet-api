@@ -3,7 +3,7 @@
  */
 
 const mongoose = require('mongoose')
-require('../../models/post')
+const Post = require('../../models/post')
 
 let data = [
   {
@@ -48,7 +48,7 @@ let data = [
         `,
     tags: ['Trader', 'Information'],
     author: '5e66fae2618e6a0cc838b9f7',
-    background: 'UN-TRADER-INFORMADO.jpg'
+    background: 'UN-TRADER-INFORMADO.jpg',
   },
   {
     in: true,
@@ -109,7 +109,7 @@ let data = [
         `,
     tags: ['Trader', 'Information'],
     author: '5e66fae2618e6a0cc838b9f7',
-    background: 'TRADING-POR-VENGANZA.jpg'
+    background: 'TRADING-POR-VENGANZA.jpg',
   },
   {
     in: true,
@@ -164,7 +164,7 @@ let data = [
         `,
     tags: ['Trader', 'Brain', 'Tips'],
     author: '5e66fae2618e6a0cc838b9f7',
-    background: 'PREPARACIÓN-MENTAL-DEL-TRADER.jpg'
+    background: 'PREPARACIÓN-MENTAL-DEL-TRADER.jpg',
   },
   {
     in: true,
@@ -222,7 +222,7 @@ let data = [
         `,
     tags: ['Trader', 'Plan', 'Tips'],
     author: '5e66fae2618e6a0cc838b9f7',
-    background: 'PLAN-DE-TRADING.jpg'
+    background: 'PLAN-DE-TRADING.jpg',
   },
   {
     in: true,
@@ -281,7 +281,7 @@ let data = [
         `,
     tags: ['Trader', 'Plan', 'Tips'],
     author: '5e66fae2618e6a0cc838b9f7',
-    background: 'MANTENLO-SIMPLE.jpg'
+    background: 'MANTENLO-SIMPLE.jpg',
   },
   {
     in: true,
@@ -326,7 +326,7 @@ let data = [
         `,
     tags: ['Trader', 'Tips'],
     author: '5e66fae2618e6a0cc838b9f7',
-    background: 'PRIMERO-DEBES-CREER.jpg'
+    background: 'PRIMERO-DEBES-CREER.jpg',
   },
   {
     in: true,
@@ -385,7 +385,7 @@ let data = [
         `,
     tags: ['Trader', 'Tips'],
     author: '5e66fae2618e6a0cc838b9f7',
-    background: 'LAS-PERDIDAS-EN-EL-TRADING.jpg'
+    background: 'LAS-PERDIDAS-EN-EL-TRADING.jpg',
   },
   {
     in: true,
@@ -445,7 +445,7 @@ let data = [
       `,
     tags: ['trader', 'miedo', 'temeridad'],
     author: '5e66fae2618e6a0cc838b9f7',
-    background: ''
+    background: '',
   },
   {
     in: true,
@@ -497,7 +497,7 @@ let data = [
       `,
     tags: ['microchips'],
     author: '5e66fae2618e6a0cc838b9f7',
-    background: ''
+    background: '',
   },
   {
     in: true,
@@ -547,7 +547,7 @@ let data = [
       `,
     tags: ['inversion', 'trader', 'ingreso'],
     author: '5e66fae2618e6a0cc838b9f7',
-    background: ''
+    background: '',
   },
   {
     in: true,
@@ -618,7 +618,7 @@ let data = [
       `,
     tags: ['emociones'],
     author: '5e66fae2618e6a0cc838b9f7',
-    background: ''
+    background: '',
   },
   {
     in: true,
@@ -674,7 +674,7 @@ let data = [
       `,
     tags: ['alexander', 'elder'],
     author: '5e66fae2618e6a0cc838b9f7',
-    background: ''
+    background: '',
   },
   {
     in: true,
@@ -726,10 +726,10 @@ let data = [
       `,
     tags: ['trading', 'consejos'],
     author: '5e66fae2618e6a0cc838b9f7',
-    background: ''
-  }
+    background: '',
+  },
 ]
 
 for (let i of data) {
-  mongoose.model('Posts').create(i)
+  Post.create(i)
 }

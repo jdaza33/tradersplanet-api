@@ -17,6 +17,7 @@
     "ejs": "^3.0.2",
     "express": "^4.17.1",
     "fsp": "^0.1.2",
+    "generate-password": "^1.5.1",
     "helmet": "^3.21.2",
     "jwt-simple": "^0.5.6",
     "mailchimp-api-v3": "^1.13.1",

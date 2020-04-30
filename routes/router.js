@@ -50,6 +50,7 @@ router.get('/users/:id', userCtrl.get)
 router.put('/users/:id', userCtrl.edit)
 router.delete('/users/:id', userCtrl.del)
 router.post('/users/login', userCtrl.login)
+router.post('/users/reset', userCtrl.resetPassword)
 router.post(
   '/users/upload/photo/:id',
   _upload.single('file'),

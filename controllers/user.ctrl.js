@@ -6,6 +6,7 @@
 
 //Modules
 const mongoose = require('mongoose')
+const generator = require('generate-password')
 
 //Instanciar el modelo
 const User = require('../models/user')
@@ -13,6 +14,9 @@ const User = require('../models/user')
 //Utils
 const _util_response = require('../utils/response.util')
 const _util_security = require('../utils/security.util')
+
+//Services
+const serviceNodemailer = require('../services/nodemailer.srv')
 
 module.exports = {
   create,
@@ -22,7 +26,8 @@ module.exports = {
   edit,
   login,
   setPhoto,
-  payCourse
+  payCourse,
+  resetPassword,
 }
 
 /**
@@ -54,7 +59,7 @@ async function create(req, res, next) {
       success: 1,
       data: { user: userCreated },
       error: null,
-      message: _util_response.getResponse(1, req.headers.iso)
+      message: _util_response.getResponse(1, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -81,7 +86,7 @@ async function get(req, res, next) {
         success: 0,
         data: null,
         error: null,
-        message: _util_response.getResponse(6, req.headers.iso)
+        message: _util_response.getResponse(6, req.headers.iso),
       })
     }
 
@@ -89,7 +94,7 @@ async function get(req, res, next) {
       success: 1,
       data: { user },
       error: null,
-      message: _util_response.getResponse(4, req.headers.iso)
+      message: _util_response.getResponse(4, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -115,7 +120,7 @@ async function list(req, res, next) {
       return res.status(200).send({
         success: 0,
         data: null,
-        error: _util_response.getResponse(7, req.headers.iso)
+        error: _util_response.getResponse(7, req.headers.iso),
       })
     }
 
@@ -123,7 +128,7 @@ async function list(req, res, next) {
       success: 1,
       data: { user: users },
       error: null,
-      message: _util_response.getResponse(5, req.headers.iso)
+      message: _util_response.getResponse(5, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -147,7 +152,7 @@ async function del(req, res, next) {
       return res.status(403).send({
         success: 0,
         data: null,
-        error: _util_response.getResponse(6, req.headers.iso)
+        error: _util_response.getResponse(6, req.headers.iso),
       })
     }
 
@@ -158,7 +163,7 @@ async function del(req, res, next) {
       success: 1,
       data: { user },
       error: null,
-      message: _util_response.getResponse(3, req.headers.iso)
+      message: _util_response.getResponse(3, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -187,7 +192,7 @@ async function edit(req, res, next) {
       return res.status(403).send({
         success: 0,
         data: null,
-        error: _util_response.getResponse(6, req.headers.iso)
+        error: _util_response.getResponse(6, req.headers.iso),
       })
     }
 
@@ -207,7 +212,7 @@ async function edit(req, res, next) {
       success: 1,
       data: { user: userUpdate },
       error: null,
-      message: _util_response.getResponse(2, req.headers.iso)
+      message: _util_response.getResponse(2, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -228,7 +233,7 @@ async function login(req, res, next) {
       return res.status(403).send({
         success: 0,
         data: null,
-        error: _util_response.getResponse(11, req.headers.iso)
+        error: _util_response.getResponse(11, req.headers.iso),
       })
     }
 
@@ -236,7 +241,7 @@ async function login(req, res, next) {
       return res.status(403).send({
         success: 0,
         data: null,
-        error: _util_response.getResponse(12, req.headers.iso)
+        error: _util_response.getResponse(12, req.headers.iso),
       })
     }
 
@@ -247,7 +252,7 @@ async function login(req, res, next) {
       return res.status(403).send({
         success: 0,
         data: null,
-        error: _util_response.getResponse(13, req.headers.iso)
+        error: _util_response.getResponse(13, req.headers.iso),
       })
     }
 
@@ -260,7 +265,7 @@ async function login(req, res, next) {
       return res.status(403).send({
         success: 0,
         data: null,
-        error: _util_response.getResponse(10, req.headers.iso)
+        error: _util_response.getResponse(10, req.headers.iso),
       })
     }
 
@@ -271,7 +276,7 @@ async function login(req, res, next) {
       success: 1,
       data: { user, token },
       error: null,
-      message: _util_response.getResponse(8, req.headers.iso)
+      message: _util_response.getResponse(8, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -290,14 +295,14 @@ async function setPhoto(req, res, next) {
     let file = req.file
 
     await mongoose.model('Users').findByIdAndUpdate(userId, {
-      photo: `${process.env.ULR}/file/${file.filename}`
+      photo: `${process.env.ULR}/file/${file.filename}`,
     })
 
     return res.status(200).send({
       success: 1,
       data: null,
       error: null,
-      message: _util_response.getResponse(2, req.headers.iso)
+      message: _util_response.getResponse(2, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -322,20 +327,71 @@ async function payCourse(req, res, next) {
       return res.status(403).send({
         success: 0,
         data: null,
-        error: _util_response.getResponse(6, req.headers.iso)
+        error: _util_response.getResponse(6, req.headers.iso),
       })
     }
 
     // Eliminamos
     await mongoose.model('Users').findByIdAndUpdate(userId, {
-      $push: { paidcourses: courseId }
+      $push: { paidcourses: courseId },
     })
 
     return res.status(200).send({
       success: 1,
       data: { user },
       error: null,
-      message: _util_response.getResponse(3, req.headers.iso)
+      message: _util_response.getResponse(3, req.headers.iso),
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+async function resetPassword(req, res, next) {
+  try {
+    let { email } = req.body
+
+    let user = await User.findOne(
+      { email },
+      { _id: 1, email: 1, name: 1 }
+    ).lean()
+
+    if (!user)
+      return res.status(403).send({
+        success: 0,
+        data: null,
+        error: _util_response.getResponse(6, req.headers.iso),
+      })
+
+    //Generamos la contraseña
+    let newPassword = generator.generate({
+      length: 6,
+      numbers: true,
+    })
+
+    //Actualizamos el usuario
+    await User.findByIdAndUpdate(user._id, {
+      password: _util_security.encryptPassword(newPassword),
+    })
+
+    //Enviamos el correo
+    await serviceNodemailer.sendMailResetPassword(
+      newPassword,
+      user.name,
+      user.email
+    )
+
+    return res.status(200).send({
+      success: 1,
+      data: { user },
+      error: null,
+      message: _util_response.getResponse(53, req.headers.iso),
     })
   } catch (error) {
     next(error)
