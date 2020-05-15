@@ -13,13 +13,16 @@ const Education = require('../models/education')
 //Utils
 const _util_response = require('../utils/response.util')
 
+//Services
+const serviceAws = require('../services/aws.srv')
+
 module.exports = {
   create,
   get,
   list,
   del,
   edit,
-  setImg
+  setImg,
 }
 
 /**
@@ -38,7 +41,7 @@ async function create(req, res, next) {
       success: 1,
       data: { education: educationCreated },
       error: null,
-      message: _util_response.getResponse(35, req.headers.iso)
+      message: _util_response.getResponse(35, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -65,7 +68,7 @@ async function get(req, res, next) {
         success: 0,
         data: null,
         error: null,
-        message: _util_response.getResponse(40, req.headers.iso)
+        message: _util_response.getResponse(40, req.headers.iso),
       })
     }
 
@@ -73,7 +76,7 @@ async function get(req, res, next) {
       success: 1,
       data: { education },
       error: null,
-      message: _util_response.getResponse(38, req.headers.iso)
+      message: _util_response.getResponse(38, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -95,19 +98,19 @@ async function list(req, res, next) {
       .find(filters)
       .populate({ path: 'tutor', select: '_id name ocupation email role' })
 
-    if (educations.length === 0) {
-      return res.status(200).send({
-        success: 0,
-        data: null,
-        error: _util_response.getResponse(41, req.headers.iso)
-      })
-    }
+    // if (educations.length === 0) {
+    //   return res.status(200).send({
+    //     success: 0,
+    //     data: null,
+    //     error: _util_response.getResponse(41, req.headers.iso)
+    //   })
+    // }
 
     return res.status(200).send({
       success: 1,
       data: { education: educations },
       error: null,
-      message: _util_response.getResponse(39, req.headers.iso)
+      message: _util_response.getResponse(39, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -131,7 +134,7 @@ async function del(req, res, next) {
       return res.status(403).send({
         success: 0,
         data: null,
-        error: _util_response.getResponse(40, req.headers.iso)
+        error: _util_response.getResponse(40, req.headers.iso),
       })
     }
 
@@ -142,7 +145,7 @@ async function del(req, res, next) {
       success: 1,
       data: { education },
       error: null,
-      message: _util_response.getResponse(37, req.headers.iso)
+      message: _util_response.getResponse(37, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -167,7 +170,7 @@ async function edit(req, res, next) {
       return res.status(403).send({
         success: 0,
         data: null,
-        error: _util_response.getResponse(40, req.headers.iso)
+        error: _util_response.getResponse(40, req.headers.iso),
       })
     }
 
@@ -179,7 +182,7 @@ async function edit(req, res, next) {
       success: 1,
       data: { education: educationUpdated },
       error: null,
-      message: _util_response.getResponse(36, req.headers.iso)
+      message: _util_response.getResponse(36, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -197,17 +200,24 @@ async function setImg(req, res, next) {
     let educationId = req.params.id
     let file = req.file
 
-    await mongoose.model('Educations').findByIdAndUpdate(educationId, {
-      img: `${process.env.ULR}/file/${file.filename}`
+    let files3 = await serviceAws.uploadFileToS3(
+      file,
+      'educations',
+      educationId
+    )
+
+    await Education.findByIdAndUpdate(educationId, {
+      img: files3.cdn,
     })
 
     return res.status(200).send({
       success: 1,
       data: null,
       error: null,
-      message: _util_response.getResponse(2, req.headers.iso)
+      message: _util_response.getResponse(2, req.headers.iso),
     })
   } catch (error) {
+    console.log(error)
     next(error)
   }
 }

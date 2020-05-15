@@ -13,13 +13,16 @@ const Post = require('../models/post')
 //Utils
 const _util_response = require('../utils/response.util')
 
+//Services
+const serviceAws = require('../services/aws.srv')
+
 module.exports = {
   create,
   get,
   list,
   del,
   edit,
-  setBackground
+  setBackground,
 }
 
 /**
@@ -38,7 +41,7 @@ async function create(req, res, next) {
       success: 1,
       data: { post: postCreated },
       error: null,
-      message: _util_response.getResponse(28, req.headers.iso)
+      message: _util_response.getResponse(28, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -57,7 +60,7 @@ async function get(req, res, next) {
 
     let post = await Post.findById(postId).populate({
       path: 'author',
-      select: '_id name lastname ocupation email role'
+      select: '_id name lastname ocupation email role',
     })
 
     if (!post) {
@@ -65,7 +68,7 @@ async function get(req, res, next) {
         success: 0,
         data: null,
         error: null,
-        message: _util_response.getResponse(33, req.headers.iso)
+        message: _util_response.getResponse(33, req.headers.iso),
       })
     }
 
@@ -73,7 +76,7 @@ async function get(req, res, next) {
       success: 1,
       data: { post },
       error: null,
-      message: _util_response.getResponse(31, req.headers.iso)
+      message: _util_response.getResponse(31, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -92,14 +95,14 @@ async function list(req, res, next) {
 
     let posts = await Post.find(filters).populate({
       path: 'author',
-      select: '_id name lastname ocupation email role'
+      select: '_id name lastname ocupation email role',
     })
 
     if (posts.length === 0) {
       return res.status(200).send({
         success: 0,
         data: null,
-        error: _util_response.getResponse(34, req.headers.iso)
+        error: _util_response.getResponse(34, req.headers.iso),
       })
     }
 
@@ -107,7 +110,7 @@ async function list(req, res, next) {
       success: 1,
       data: { post: posts },
       error: null,
-      message: _util_response.getResponse(32, req.headers.iso)
+      message: _util_response.getResponse(32, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -131,7 +134,7 @@ async function del(req, res, next) {
       return res.status(403).send({
         success: 0,
         data: null,
-        error: _util_response.getResponse(33, req.headers.iso)
+        error: _util_response.getResponse(33, req.headers.iso),
       })
     }
 
@@ -142,7 +145,7 @@ async function del(req, res, next) {
       success: 1,
       data: { post },
       error: null,
-      message: _util_response.getResponse(30, req.headers.iso)
+      message: _util_response.getResponse(30, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -167,7 +170,7 @@ async function edit(req, res, next) {
       return res.status(403).send({
         success: 0,
         data: null,
-        error: _util_response.getResponse(33, req.headers.iso)
+        error: _util_response.getResponse(33, req.headers.iso),
       })
     }
 
@@ -179,7 +182,7 @@ async function edit(req, res, next) {
       success: 1,
       data: { post: postUpdated },
       error: null,
-      message: _util_response.getResponse(29, req.headers.iso)
+      message: _util_response.getResponse(29, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -197,15 +200,17 @@ async function setBackground(req, res, next) {
     let postId = req.params.id
     let file = req.file
 
+    let files3 = await serviceAws.uploadFileToS3(file, 'posts', postId)
+
     await Post.findByIdAndUpdate(postId, {
-      background: `${process.env.ULR}/file/${file.filename}`
+      background: files3.cdn,
     })
 
     return res.status(200).send({
       success: 1,
       data: null,
       error: null,
-      message: _util_response.getResponse(2, req.headers.iso)
+      message: _util_response.getResponse(2, req.headers.iso),
     })
   } catch (error) {
     next(error)

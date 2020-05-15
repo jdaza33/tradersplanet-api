@@ -18,7 +18,7 @@ module.exports = {
   get,
   list,
   del,
-  edit
+  edit,
 }
 
 /**
@@ -37,7 +37,7 @@ async function create(req, res, next) {
       success: 1,
       data: { testimony: testimonyCreated },
       error: null,
-      message: _util_response.getResponse(21, req.headers.iso)
+      message: _util_response.getResponse(21, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -54,14 +54,17 @@ async function get(req, res, next) {
   try {
     let testimonyId = req.params.id
 
-    let testimony = await mongoose.model('Testimonies').findById(testimonyId)
+    let testimony = await mongoose
+      .model('Testimonies')
+      .findById(testimonyId)
+      .populate({ path: 'educationId', select: '_id title' })
 
     if (!testimony) {
       return res.status(403).send({
         success: 0,
         data: null,
         error: null,
-        message: _util_response.getResponse(26, req.headers.iso)
+        message: _util_response.getResponse(26, req.headers.iso),
       })
     }
 
@@ -69,7 +72,7 @@ async function get(req, res, next) {
       success: 1,
       data: { testimony },
       error: null,
-      message: _util_response.getResponse(24, req.headers.iso)
+      message: _util_response.getResponse(24, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -86,13 +89,16 @@ async function list(req, res, next) {
   try {
     let filters = req.body
 
-    let testimonies = await mongoose.model('Testimonies').find(filters)
+    let testimonies = await mongoose
+      .model('Testimonies')
+      .find(filters)
+      .populate({ path: 'educationId', select: '_id title' })
 
     if (testimonies.length === 0) {
       return res.status(200).send({
         success: 0,
         data: null,
-        error: _util_response.getResponse(27, req.headers.iso)
+        error: _util_response.getResponse(27, req.headers.iso),
       })
     }
 
@@ -100,7 +106,7 @@ async function list(req, res, next) {
       success: 1,
       data: { testimony: testimonies },
       error: null,
-      message: _util_response.getResponse(25, req.headers.iso)
+      message: _util_response.getResponse(25, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -124,7 +130,7 @@ async function del(req, res, next) {
       return res.status(403).send({
         success: 0,
         data: null,
-        error: _util_response.getResponse(26, req.headers.iso)
+        error: _util_response.getResponse(26, req.headers.iso),
       })
     }
 
@@ -135,7 +141,7 @@ async function del(req, res, next) {
       success: 1,
       data: { testimony },
       error: null,
-      message: _util_response.getResponse(23, req.headers.iso)
+      message: _util_response.getResponse(23, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -160,7 +166,7 @@ async function edit(req, res, next) {
       return res.status(403).send({
         success: 0,
         data: null,
-        error: _util_response.getResponse(26, req.headers.iso)
+        error: _util_response.getResponse(26, req.headers.iso),
       })
     }
 
@@ -172,7 +178,7 @@ async function edit(req, res, next) {
       success: 1,
       data: { testimony: testimonyUpdated },
       error: null,
-      message: _util_response.getResponse(22, req.headers.iso)
+      message: _util_response.getResponse(22, req.headers.iso),
     })
   } catch (error) {
     next(error)

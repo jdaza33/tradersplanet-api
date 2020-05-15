@@ -5,23 +5,28 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js"
+    "dev": "env NODE_ENV=development nodemon server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-s3": "^2.0.5",
+    "aws-sdk": "^2.670.0",
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "connect-history-api-fallback": "^1.6.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "ejs": "^3.0.2",
     "express": "^4.17.1",
+    "fs": "0.0.1-security",
     "fsp": "^0.1.2",
     "generate-password": "^1.5.1",
     "helmet": "^3.21.2",
     "jwt-simple": "^0.5.6",
     "mailchimp-api-v3": "^1.13.1",
-    "mime": "^2.4.4",
+    "mime": "^2.4.5",
     "mkdirp": "^1.0.3",
     "mongoose": "^5.7.6",
     "mongoose-timestamp": "^0.6.0",
@@ -32,7 +37,8 @@
     "path": "^0.12.7",
     "promise-fs": "^2.1.1",
     "shelljs": "^0.8.3",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.3.0",
+    "stripe": "^8.52.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.4"

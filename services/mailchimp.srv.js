@@ -11,7 +11,7 @@ module.exports = {
   addMemberToAudience,
 }
 
-async function listAudiences() {
+function listAudiences() {
   return new Promise(async (resolve, reject) => {
     try {
       mailchimp.get(
@@ -30,7 +30,7 @@ async function listAudiences() {
   })
 }
 
-async function addMemberToAudience(name, email, audienceId) {
+function addMemberToAudience(name, email, audienceId) {
   return new Promise(async (resolve, reject) => {
     try {
       mailchimp.post(

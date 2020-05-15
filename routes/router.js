@@ -24,6 +24,7 @@ const mailchimpCtrl = require('../controllers/mailchimp.ctrl')
 const audienceCtrl = require('../controllers/audience.ctrl')
 const subscriberCtrl = require('../controllers/subscriber.ctrl')
 const webhookCtrl = require('../controllers/webhook.ctrl')
+const paymentCtrl = require('../controllers/payment.ctrl')
 
 //Multer
 const multer = require('multer')
@@ -126,6 +127,9 @@ router.post('/webhook', webhookCtrl.main)
 /** Subscribers */
 router.post('/subscribers/create', subscriberCtrl.create)
 router.post('/subscribers/list', subscriberCtrl.list)
+
+/** Payments */
+router.post('/payments/stripe/create', paymentCtrl.create)
 
 /** Uploads */
 router.get('/file/:name', async (req, res, next) => {

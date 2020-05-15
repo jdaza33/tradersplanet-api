@@ -484,5 +484,14 @@
         "text": "Contraseña restablecida."
       }
     ]
+  },
+  {
+    "code": 54,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Pago realizado con éxito."
+      }
+    ]
   }
 ]

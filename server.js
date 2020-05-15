@@ -9,6 +9,7 @@ const helmet = require('helmet')
 const router = require('./routes/router')
 const mkdirp = require('mkdirp')
 const path = require('path')
+const bodyParser = require('body-parser')
 
 //Constantes
 const PORT = process.env.PORT || 3001
@@ -24,8 +25,21 @@ mkdirp.sync(path.join(__dirname, 'files/'))
 
 //Middlewares
 app.use(cors())
-app.use(express.json())
-app.use(express.urlencoded())
+// app.use(express.json())
+// app.use(express.urlencoded())
+app.use(
+  bodyParser.json({
+    limit: '50mb',
+  })
+)
+
+app.use(
+  bodyParser.urlencoded({
+    limit: '50mb',
+    parameterLimit: 100000,
+    extended: true,
+  })
+)
 app.use(helmet())
 
 //Database
@@ -42,4 +56,5 @@ app.use(_util_error.errorHandler)
 
 app.listen(PORT, () => {
   console.log(`Servidor iniciado en el puerto: ${PORT}`)
+  console.log('Modo --> ' + process.env.NODE_ENV)
 })
