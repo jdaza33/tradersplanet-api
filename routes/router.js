@@ -130,6 +130,7 @@ router.post('/subscribers/list', subscriberCtrl.list)
 
 /** Payments */
 router.post('/payments/stripe/create', paymentCtrl.create)
+router.post('/payments/stripe/create-source', paymentCtrl.createWithSource)
 
 /** Uploads */
 router.get('/file/:name', async (req, res, next) => {

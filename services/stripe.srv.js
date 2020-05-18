@@ -13,7 +13,7 @@ const stripe = require('stripe')(
 )
 console.log(process.env.NODE_ENV)
 
-module.exports = { newPayment }
+module.exports = { newPayment, newPaymentWithSource }
 
 function newPayment(data) {
   return new Promise(async (resolve, reject) => {
@@ -33,6 +33,26 @@ function newPayment(data) {
         amount: Math.round(data.amount * 100),
         currency: 'usd',
         source: token.id,
+        receipt_email: data.email,
+        description: data.description,
+      })
+
+      resolve(charge)
+    } catch (error) {
+      console.log(error)
+      reject(error)
+    }
+  })
+}
+
+function newPaymentWithSource(data) {
+  return new Promise(async (resolve, reject) => {
+    try {
+
+      let charge = await stripe.charges.create({
+        amount: Math.round(data.amount * 100),
+        currency: 'usd',
+        source: data.token,
         receipt_email: data.email,
         description: data.description,
       })

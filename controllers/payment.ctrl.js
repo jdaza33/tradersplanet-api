@@ -15,6 +15,7 @@ const serviceStripe = require('../services/stripe.srv')
 
 module.exports = {
   create,
+  createWithSource
 }
 
 /**
@@ -28,6 +29,29 @@ async function create(req, res, next) {
     let data = req.body
 
     let pay = await serviceStripe.newPayment(data)
+
+    return res.status(200).send({
+      success: 1,
+      data: { pay },
+      error: null,
+      message: _util_response.getResponse(54, req.headers.iso),
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+async function createWithSource(req, res, next) {
+  try {
+    let data = req.body
+
+    let pay = await serviceStripe.newPaymentWithSource(data)
 
     return res.status(200).send({
       success: 1,
