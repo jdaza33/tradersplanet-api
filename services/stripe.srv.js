@@ -52,7 +52,7 @@ function newPaymentWithSource(data) {
       let charge = await stripe.charges.create({
         amount: Math.round(data.amount * 100),
         currency: 'usd',
-        source: data.token,
+        source: data.source,
         receipt_email: data.email,
         description: data.description,
       })
