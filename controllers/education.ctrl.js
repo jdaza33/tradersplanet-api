@@ -35,6 +35,9 @@ async function create(req, res, next) {
   try {
     let data = req.body
 
+    let max = await Education.findOne({}).sort({ order: -1 }).limit(1)
+    data.order = max.order + 1
+
     let educationCreated = await mongoose.model('Educations').create(data)
 
     return res.status(200).send({
@@ -97,6 +100,8 @@ async function list(req, res, next) {
       .model('Educations')
       .find(filters)
       .populate({ path: 'tutor', select: '_id name ocupation email role' })
+      .sort({ order: 1 })
+      .lean()
 
     // if (educations.length === 0) {
     //   return res.status(200).send({

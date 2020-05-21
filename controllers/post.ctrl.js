@@ -93,10 +93,11 @@ async function list(req, res, next) {
   try {
     let filters = req.body
 
-    let posts = await Post.find(filters).populate({
-      path: 'author',
-      select: '_id name lastname ocupation email role',
-    })
+    let posts = await Post.find(filters)
+      .populate({
+        path: 'author',
+        select: '_id name lastname ocupation email role',
+      })
 
     if (posts.length === 0) {
       return res.status(200).send({

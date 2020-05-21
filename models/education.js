@@ -11,7 +11,7 @@ const Education = new Schema({
   title: { type: String, trim: true },
   content: { type: String, trim: true },
   tutor: { type: String, trim: true, ref: 'Users' },
-  published: {type: Boolean, default: false},
+  published: { type: Boolean, default: false },
   price: Number,
   offprice: { type: Number, default: 0 },
   short_description: String,
@@ -19,7 +19,8 @@ const Education = new Schema({
   learn: [String],
   img: String,
   tags: [String],
-  requirements: [String]
+  requirements: [String],
+  order: {type: Number, unique: true, required: true}
 })
 
 Education.plugin(timestamp)

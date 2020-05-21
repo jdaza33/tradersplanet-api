@@ -31,6 +31,8 @@ async function create(req, res, next) {
   try {
     let data = req.body
 
+    if (data.educationId == '') data.educationId = null
+
     let testimonyCreated = await mongoose.model('Testimonies').create(data)
 
     return res.status(200).send({
@@ -94,13 +96,13 @@ async function list(req, res, next) {
       .find(filters)
       .populate({ path: 'educationId', select: '_id title' })
 
-    if (testimonies.length === 0) {
-      return res.status(200).send({
-        success: 0,
-        data: null,
-        error: _util_response.getResponse(27, req.headers.iso),
-      })
-    }
+    // if (testimonies.length === 0) {
+    //   return res.status(200).send({
+    //     success: 0,
+    //     data: null,
+    //     error: _util_response.getResponse(27, req.headers.iso),
+    //   })
+    // }
 
     return res.status(200).send({
       success: 1,
@@ -158,6 +160,7 @@ async function edit(req, res, next) {
   try {
     let testimonyId = req.params.id
     let changes = req.body
+    changes.viewed = true
 
     // Verificar si existe dicho id
     let testimony = await mongoose.model('Testimonies').findById(testimonyId)

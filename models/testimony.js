@@ -10,6 +10,8 @@ const Schema = mongoose.Schema
 const Testimony = new Schema({
   email: { type: String, required: true },
   active: { type: Boolean, default: false, required: true },
+  viewed: { type: Boolean, default: false, required: true },
+  edited: { type: Boolean, default: false, required: true },
   name: { type: String, unique: false, required: false },
   // userId: { type: String, unique: false, required: false, ref: 'Users' },
   content: { type: String, unique: false, required: true },
