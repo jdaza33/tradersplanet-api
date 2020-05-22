@@ -100,7 +100,7 @@ async function list(req, res, next) {
       .model('Educations')
       .find(filters)
       .populate({ path: 'tutor', select: '_id name ocupation email role' })
-      .sort({ order: 1 })
+      .sort({ order: -1 })
       .lean()
 
     // if (educations.length === 0) {

@@ -98,14 +98,16 @@ async function list(req, res, next) {
         path: 'author',
         select: '_id name lastname ocupation email role',
       })
+      .sort({ createdAt: -1 })
+      .lean()
 
-    if (posts.length === 0) {
-      return res.status(200).send({
-        success: 0,
-        data: null,
-        error: _util_response.getResponse(34, req.headers.iso),
-      })
-    }
+    // if (posts.length === 0) {
+    //   return res.status(200).send({
+    //     success: 0,
+    //     data: null,
+    //     error: _util_response.getResponse(34, req.headers.iso),
+    //   })
+    // }
 
     return res.status(200).send({
       success: 1,
