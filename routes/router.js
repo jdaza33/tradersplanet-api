@@ -71,6 +71,7 @@ router.post('/educations/create', educationCtrl.create)
 router.post('/educations/list', educationCtrl.list)
 router.get('/educations/:id', educationCtrl.get)
 router.put('/educations/:id', educationCtrl.edit)
+router.put('/educations/move/:id', educationCtrl.move)
 router.delete('/educations/:id', educationCtrl.del)
 router.post(
   '/educations/upload/img/:id',

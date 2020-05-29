@@ -20,7 +20,7 @@ const Education = new Schema({
   img: String,
   tags: [String],
   requirements: [String],
-  order: {type: Number, unique: true, required: true}
+  order: {type: Number, required: true}
 })
 
 Education.plugin(timestamp)

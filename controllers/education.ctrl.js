@@ -23,6 +23,7 @@ module.exports = {
   del,
   edit,
   setImg,
+  move,
 }
 
 /**
@@ -223,6 +224,104 @@ async function setImg(req, res, next) {
     })
   } catch (error) {
     console.log(error)
+    next(error)
+  }
+}
+
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+async function move(req, res, next) {
+  try {
+    let educationId = req.params.id
+    let { op } = req.body
+
+    // Verificar si existe dicho id
+    let education = await Education.findById(educationId)
+
+    if (!education) {
+      return res.status(403).send({
+        success: 0,
+        data: null,
+        error: _util_response.getResponse(40, req.headers.iso),
+      })
+    }
+
+    if (op == 'up') {
+      let max = await Education.findOne({}).sort({ order: -1 }).limit(1)
+      if (education.order < max.order) {
+        let tmp = await Education.findOne({ order: education.order + 1 }).lean()
+
+        if (tmp) {
+          await mongoose
+            .model('Educations')
+            .findByIdAndUpdate(tmp._id, { $set: { order: 1000000 } })
+          await mongoose
+            .model('Educations')
+            .findByIdAndUpdate(
+              educationId,
+              { $set: { order: education.order + 1 } },
+              { new: true }
+            )
+          await mongoose
+            .model('Educations')
+            .findByIdAndUpdate(
+              tmp._id,
+              { $set: { order: education.order } },
+              { new: true }
+            )
+        }
+      } else {
+        return res.status(200).send({
+          success: 2,
+          data: null,
+          error: null,
+          message: 'The course has the highest order',
+        })
+      }
+    } else {
+      if (education.order > 1) {
+        let tmp = await Education.findOne({ order: education.order - 1 }).lean()
+
+        if (tmp) {
+          await mongoose
+            .model('Educations')
+            .findByIdAndUpdate(tmp._id, { $set: { order: 1000000 } })
+          await mongoose
+            .model('Educations')
+            .findByIdAndUpdate(
+              educationId,
+              { $set: { order: education.order - 1 } },
+              { new: true }
+            )
+          await mongoose
+            .model('Educations')
+            .findByIdAndUpdate(
+              tmp._id,
+              { $set: { order: education.order } },
+              { new: true }
+            )
+        }
+      } else {
+        return res.status(200).send({
+          success: 2,
+          data: null,
+          error: null,
+          message: 'The course has the lowest order',
+        })
+      }
+    }
+
+    return res.status(200).send({
+      success: 1,
+      data: null,
+      error: null,
+      message: 'Course moved successfully',
+    })
+  } catch (error) {
     next(error)
   }
 }
