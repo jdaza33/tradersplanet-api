@@ -25,6 +25,7 @@ const audienceCtrl = require('../controllers/audience.ctrl')
 const subscriberCtrl = require('../controllers/subscriber.ctrl')
 const webhookCtrl = require('../controllers/webhook.ctrl')
 const paymentCtrl = require('../controllers/payment.ctrl')
+const advertisingCtrl = require('../controllers/advertising.ctrl')
 
 //Multer
 const multer = require('multer')
@@ -105,6 +106,13 @@ router.get('/testimonies/:id', testimonyCtrl.get)
 router.put('/testimonies/:id', testimonyCtrl.edit)
 router.delete('/testimonies/:id', testimonyCtrl.del)
 
+/** Advertising */
+router.post('/advertisings/create', advertisingCtrl.create)
+router.post('/advertisings/list', advertisingCtrl.list)
+router.get('/advertisings/:id', advertisingCtrl.get)
+router.put('/advertisings/:id', advertisingCtrl.edit)
+router.delete('/advertisings/:id', advertisingCtrl.del)
+
 /** Contact */
 router.post('/contact/create', contactCtrl.create)
 
@@ -124,6 +132,7 @@ router.get('/webhook', (req, res, next) => {
   }
 })
 router.post('/webhook', webhookCtrl.main)
+router.post('/webhook/stripe', webhookCtrl.stripe)
 
 /** Subscribers */
 router.post('/subscribers/create', subscriberCtrl.create)

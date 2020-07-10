@@ -493,5 +493,68 @@
         "text": "Pago realizado con éxito."
       }
     ]
+  },
+  {
+    "code": 55,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Publicidad creada con éxito."
+      }
+    ]
+  },
+  {
+    "code": 56,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "La publicidad no existe."
+      }
+    ]
+  },
+  {
+    "code": 57,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Publicidad obtenida con éxito."
+      }
+    ]
+  },
+  {
+    "code": 58,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Lista de publicidades vacia."
+      }
+    ]
+  },
+  {
+    "code": 59,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Lista de publicidades obtenida con éxito."
+      }
+    ]
+  },
+  {
+    "code": 60,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Publicidad elimina con éxito."
+      }
+    ]
+  },
+  {
+    "code": 61,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Publicidad editada con éxito."
+      }
+    ]
   }
 ]

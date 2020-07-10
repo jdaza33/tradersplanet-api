@@ -19,6 +19,7 @@ const _util_response = require('../utils/response.util')
 
 module.exports = {
   main,
+  stripe,
 }
 
 /**
@@ -61,6 +62,42 @@ async function main(req, res, next) {
             { $pull: { audienceIds: audienceId } }
           )
       }
+    }
+
+    return res.status(200).send({
+      success: 1,
+      error: null,
+    })
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+async function stripe(req, res, next) {
+  try {
+    let event = req.body
+
+    let idEvent = event.id
+    let typeEvent = event.type
+    let dataEvent = event.data.object
+    let emailUser = dataEvent.receipt_email
+    let amount = dataEvent.amount
+
+    if (typeEvent == 'charge.succeeded') {
+      console.log('---- RECIBIENDO NUEVO PAGO ----')
+
+      console.log('id --> ', idEvent)
+      console.log('type --> ', typeEvent)
+      // console.log(dataEvent)
+      console.log('email --> ', emailUser)
+      console.log('---------------\n\n')
     }
 
     return res.status(200).send({

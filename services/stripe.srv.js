@@ -48,13 +48,16 @@ function newPayment(data) {
 function newPaymentWithSource(data) {
   return new Promise(async (resolve, reject) => {
     try {
-
       let charge = await stripe.charges.create({
         amount: Math.round(data.amount * 100),
         currency: 'usd',
         source: data.source,
         receipt_email: data.email,
         description: data.description,
+        metadata: {
+          objectType: data.type,
+          objectId: data.typeId,
+        },
       })
 
       resolve(charge)
