@@ -95,6 +95,13 @@ async function list(req, res, next) {
       .model('Testimonies')
       .find(filters)
       .populate({ path: 'educationId', select: '_id title' })
+      .lean()
+
+    testimonies = testimonies.map((t) => {
+      let _t = { ...t }
+      _t.abrv = `${t.name}: ${t.content.substring(0,50)}`
+      return _t
+    })
 
     // if (testimonies.length === 0) {
     //   return res.status(200).send({

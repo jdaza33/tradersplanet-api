@@ -9,6 +9,7 @@ const mongoose = require('mongoose')
 
 //Models
 const Post = require('../models/post')
+const Advertising = require('../models/advertising')
 
 //Utils
 const _util_response = require('../utils/response.util')
@@ -58,10 +59,12 @@ async function get(req, res, next) {
   try {
     let postId = req.params.id
 
-    let post = await Post.findById(postId).populate({
-      path: 'author',
-      select: '_id name lastname ocupation email role',
-    })
+    let post = await Post.findById(postId)
+      .populate({
+        path: 'author',
+        select: '_id name lastname ocupation email role',
+      })
+      .lean()
 
     if (!post) {
       return res.status(403).send({
@@ -71,6 +74,17 @@ async function get(req, res, next) {
         message: _util_response.getResponse(33, req.headers.iso),
       })
     }
+
+    let ad = await Advertising.find({
+      postId,
+    })
+      .populate({
+        path: 'testimonyId',
+        select: '_id name email content',
+      })
+      .lean()
+
+    post.advertising = ad
 
     return res.status(200).send({
       success: 1,
@@ -101,17 +115,16 @@ async function list(req, res, next) {
       .sort({ createdAt: -1 })
       .lean()
 
-    // if (posts.length === 0) {
-    //   return res.status(200).send({
-    //     success: 0,
-    //     data: null,
-    //     error: _util_response.getResponse(34, req.headers.iso),
-    //   })
-    // }
+    let ads = await Advertising.find({})
+      .populate({
+        path: 'testimonyId',
+        select: '_id name email content',
+      })
+      .lean()
 
     return res.status(200).send({
       success: 1,
-      data: { post: posts },
+      data: { post: posts, advertising: ads },
       error: null,
       message: _util_response.getResponse(32, req.headers.iso),
     })

@@ -556,5 +556,14 @@
         "text": "Publicidad editada con éxito."
       }
     ]
+  },
+  {
+    "code": 62,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Invitación enviada con éxito."
+      }
+    ]
   }
 ]

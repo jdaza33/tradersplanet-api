@@ -9,9 +9,13 @@ const mongoose = require('mongoose')
 
 //Instanciar el modelo
 const Advertising = require('../models/advertising')
+const Post = require('../models/post')
 
 //Utils
 const _util_response = require('../utils/response.util')
+
+//Services
+const serviceAws = require('../services/aws.srv')
 
 module.exports = {
   create,
@@ -19,6 +23,7 @@ module.exports = {
   list,
   del,
   edit,
+  setImage,
 }
 
 /**
@@ -86,28 +91,40 @@ async function list(req, res, next) {
   try {
     let filters = req.body
 
-    let advertisings = await Advertising.find(filters).populate(
-      {
-        path: 'postId',
-        select: '_id title',
-      },
-      {
-        path: 'testimonyId',
-        select: '_id name email',
-      },
-      {
-        path: 'createdBy',
-        select: '_id name lastname',
-      }
-    )
+    let advertisings = await Advertising.find(filters)
+      .populate(
+        // {
+        //   path: 'postId',
+        //   select: '_id title',
+        // },
+        {
+          path: 'testimonyId',
+          select: '_id name email content',
+        }
+      )
+      .lean()
 
-    if (advertisings.length === 0) {
-      return res.status(200).send({
-        success: 0,
-        data: null,
-        error: _util_response.getResponse(58, req.headers.iso),
-      })
-    }
+    //Find posts
+    let posts = []
+    for (let ad of advertisings) posts = [...posts, ...ad.postId]
+
+    let findPosts = await Post.find(
+      { _id: { $in: posts } },
+      { _id: 1, title: 1 }
+    ).lean()
+
+    advertisings = advertisings.map((a) => {
+      let tmp = { ...a }
+      if (tmp.testimonyId)
+        tmp.testimonyId.abrv = `${
+          tmp.testimonyId.name
+        }: ${tmp.testimonyId.content.substring(0, 50)}`
+
+      tmp.postId = findPosts.filter((f) =>
+        tmp.postId.includes(f._id.toString())
+      )
+      return tmp
+    })
 
     return res.status(200).send({
       success: 1,
@@ -188,6 +205,34 @@ async function edit(req, res, next) {
       data: { advertising: adUpdated },
       error: null,
       message: _util_response.getResponse(61, req.headers.iso),
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+async function setImage(req, res, next) {
+  try {
+    let adId = req.params.id
+    let file = req.file
+
+    let files3 = await serviceAws.uploadFileToS3(file, 'advertising', adId)
+
+    await Advertising.findByIdAndUpdate(adId, {
+      image: files3.cdn,
+    })
+
+    return res.status(200).send({
+      success: 1,
+      data: null,
+      error: null,
+      message: _util_response.getResponse(2, req.headers.iso),
     })
   } catch (error) {
     next(error)

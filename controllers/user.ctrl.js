@@ -7,6 +7,8 @@
 //Modules
 const mongoose = require('mongoose')
 const generator = require('generate-password')
+const moment = require('moment')
+require('dotenv').config()
 
 //Instanciar el modelo
 const User = require('../models/user')
@@ -28,6 +30,7 @@ module.exports = {
   setPhoto,
   payCourse,
   resetPassword,
+  inviteToSlack,
 }
 
 /**
@@ -394,6 +397,72 @@ async function resetPassword(req, res, next) {
       message: _util_response.getResponse(53, req.headers.iso),
     })
   } catch (error) {
+    next(error)
+  }
+}
+
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+async function inviteToSlack(req, res, next) {
+  try {
+    let userId = req.params.id
+
+    let user = await User.findById(userId, {
+      _id: 1,
+      name: 1,
+      email: 1,
+      expireAt: 1,
+      subscription: 1,
+    }).lean()
+
+    if (user) {
+      let days = 0
+
+      if (user.expireAt) {
+        let today = moment()
+        let expireAt = moment(user.expireAt)
+        days = expireAt.diff(today, 'days')
+        if (days < 0) days = 0
+      }
+
+      //Calculando nuevos dias
+      days = parseInt(days) + parseInt(process.env.DAYS_AVAILABLE_SLACK)
+      let newExpireAt = moment().add(days, 'days').format('YYYY-MM-DD')
+
+      console.log('days -->', days)
+      console.log('newExpireAt', newExpireAt)
+
+      //Actualizamos el usuario
+      await User.findByIdAndUpdate(user._id, {
+        $set: {
+          subscription: true,
+          expireAt: newExpireAt,
+          subscriptionManual: true,
+        },
+      })
+
+      await serviceNodemailer.sendMailSlack(user.email, user.name, days)
+
+      return res.status(200).send({
+        success: 1,
+        data: null,
+        error: null,
+        message: _util_response.getResponse(62, req.headers.iso),
+      })
+    } else {
+      return res.status(404).send({
+        success: 0,
+        data: null,
+        error: null,
+        message: _util_response.getResponse(6, req.headers.iso),
+      })
+    }
+  } catch (error) {
+    console.log(error)
     next(error)
   }
 }

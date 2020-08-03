@@ -22,9 +22,11 @@ const User = new Schema({
   },
   active: { type: Boolean, default: true, required: true },
   subscription: { type: Boolean, default: false, required: false },
+  subscriptionManual: { type: Boolean, default: false, required: false },
   gender: { type: String, enum: ['male', 'female'], required: false },
   photo: { type: String, required: false },
   paidcourses: [{ type: String, required: false, ref: 'Educations' }],
+  expireAt: { type: String, required: false },
 })
 
 User.plugin(timestamp)

@@ -8,6 +8,7 @@
 const express = require('express')
 const fsp = require('promise-fs')
 const mime = require('mime')
+const cron = require('node-cron')
 
 //Constantes
 const router = express.Router()
@@ -112,6 +113,11 @@ router.post('/advertisings/list', advertisingCtrl.list)
 router.get('/advertisings/:id', advertisingCtrl.get)
 router.put('/advertisings/:id', advertisingCtrl.edit)
 router.delete('/advertisings/:id', advertisingCtrl.del)
+router.post(
+  '/advertisings/upload/image/:id',
+  _upload.single('file'),
+  advertisingCtrl.setImage
+)
 
 /** Contact */
 router.post('/contact/create', contactCtrl.create)
@@ -156,6 +162,23 @@ router.get('/file/:name', async (req, res, next) => {
     console.log('Error al consultar archivo')
     next(error)
   }
+})
+
+/** Redirect */
+router.get('/redirect/slack', async (req, res, next) => {
+  try {
+    console.log(req.query)
+    console.log(req.body)
+    res.status(200)
+  } catch (error) {
+    console.log('Error al redireccionar')
+    next(error)
+  }
+})
+
+/** CRON */
+cron.schedule('* * * * *', () => {
+  webhookCtrl.taskStripeCourse()
 })
 
 /** Middleware - Devuelve un error 404 si la ruta solicitada no está definida */
