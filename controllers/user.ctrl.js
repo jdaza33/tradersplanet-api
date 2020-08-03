@@ -118,14 +118,15 @@ async function list(req, res, next) {
       .model('Users')
       .find(filters)
       .populate({ path: 'paidcourses' })
+      .lean()
 
-    if (users.length === 0) {
-      return res.status(200).send({
-        success: 0,
-        data: null,
-        error: _util_response.getResponse(7, req.headers.iso),
-      })
-    }
+    // if (users.length === 0) {
+    //   return res.status(200).send({
+    //     success: 0,
+    //     data: null,
+    //     error: _util_response.getResponse(7, req.headers.iso),
+    //   })
+    // }
 
     return res.status(200).send({
       success: 1,
