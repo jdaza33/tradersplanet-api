@@ -60,6 +60,7 @@ router.post(
   userCtrl.setPhoto
 )
 router.put('/users/pay/course/:id/:courseId', userCtrl.payCourse)
+router.get('/users/invite/slack/:id', userCtrl.inviteToSlack)
 
 /** Lessons */
 router.post('/lessons/create', lessonCtrl.create)
