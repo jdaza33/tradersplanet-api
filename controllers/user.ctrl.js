@@ -434,6 +434,7 @@ async function inviteToSlack(req, res, next) {
       days = parseInt(days) + parseInt(process.env.DAYS_AVAILABLE_SLACK)
       let newExpireAt = moment().add(days, 'days').format('YYYY-MM-DD')
 
+      console.log(process.env.DAYS_AVAILABLE_SLACK)
       console.log('days -->', days)
       console.log('newExpireAt', newExpireAt)
 

@@ -43,7 +43,7 @@ function sendMail(subject, text, name, email) {
       ]
 
       let info = await transport.sendMail({
-        from: '"Admin 👻" <admin@tradersplanet.us>',
+        from: '"Traders Planet - Admin 👻" <admin@tradersplanet.us>',
         // from: 'admin@tradersplanet.us',
         to: 'info@tradersplanet.us',
         // to: 'blackencio33@gmail.com',
@@ -92,7 +92,7 @@ function sendMailResetPassword(password, name, email) {
       ]
 
       let info = await transport.sendMail({
-        from: '"Admin 👻" <admin@tradersplanet.us>',
+        from: '"Traders Planet - Admin 👻" <admin@tradersplanet.us>',
         // from: 'admin@tradersplanet.us',
         // to: 'info@tradersplanet.us',
         to: email,
@@ -145,7 +145,7 @@ function sendMailSlack(email, name, nro) {
       ]
 
       let info = await transport.sendMail({
-        from: '"Admin 👻" <admin@tradersplanet.us>',
+        from: '"Traders Planet - Admin 👻" <admin@tradersplanet.us>',
         to: email,
         subject: 'Bienvenido a Traders Planet',
         html: template,
