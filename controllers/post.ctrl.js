@@ -83,9 +83,20 @@ async function get(req, res, next) {
         select: '_id name email content',
       })
       .lean()
+      .sort({ createdAt: -1 })
+      .limit(2)
+
+    if (ad.length == 0)
+      ad = await Advertising.find({})
+        .populate({
+          path: 'testimonyId',
+          select: '_id name email content',
+        })
+        .lean()
+        .sort({ createdAt: -1 })
+        .limit(2)
 
     post.advertising = ad
-
     return res.status(200).send({
       success: 1,
       data: { post },
@@ -121,6 +132,8 @@ async function list(req, res, next) {
         select: '_id name email content',
       })
       .lean()
+      .sort({ createdAt: -1 })
+      .limit(5)
 
     return res.status(200).send({
       success: 1,

@@ -115,7 +115,7 @@ router.get('/advertisings/:id', advertisingCtrl.get)
 router.put('/advertisings/:id', advertisingCtrl.edit)
 router.delete('/advertisings/:id', advertisingCtrl.del)
 router.post(
-  '/advertisings/upload/image/:id',
+  '/advertisings/upload/image/:id/:op',
   _upload.single('file'),
   advertisingCtrl.setImage
 )

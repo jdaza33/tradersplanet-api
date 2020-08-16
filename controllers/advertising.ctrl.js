@@ -220,14 +220,24 @@ async function edit(req, res, next) {
 async function setImage(req, res, next) {
   try {
     let adId = req.params.id
+    let op = req.params.op
+    op = parseInt(op)
     let file = req.file
 
-    let files3 = await serviceAws.uploadFileToS3(file, 'advertising', adId)
+    let files3 = await serviceAws.uploadFileToS3(
+      file,
+      'advertising',
+      `${adId}_${op}`
+    )
 
-    await Advertising.findByIdAndUpdate(adId, {
-      image: files3.cdn,
-    })
-
+    if (op == 1)
+      await Advertising.findByIdAndUpdate(adId, {
+        image: files3.cdn,
+      })
+    else
+      await Advertising.findByIdAndUpdate(adId, {
+        imageTwo: files3.cdn,
+      })
     return res.status(200).send({
       success: 1,
       data: null,

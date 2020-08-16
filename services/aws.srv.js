@@ -39,7 +39,7 @@ function uploadFileToS3(file, model, modelId) {
         resolve({
           message: 'Archivo subido con exito',
           path: `${bucket}/${filename}`,
-          cdn: `${process.env.S3_URL}/${model}/${filename}`,
+          cdn: `${process.env.S3_URL}/${model}/${filename}?versionId=${data.VersionId}`,
           data,
         })
       })
