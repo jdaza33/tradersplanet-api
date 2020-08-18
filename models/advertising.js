@@ -12,6 +12,7 @@ const Advertising = new Schema({
   image: { type: String, required: false },
   imageTwo: { type: String, required: false },
   url: { type: String, required: false },
+  urlTwo: { type: String, required: false },
   postId: [{ type: String, required: false, ref: 'Posts' }],
   testimonyId: { type: String, required: true, ref: 'Testimonies' },
   createdBy: { type: String, required: false, ref: 'Users' },
