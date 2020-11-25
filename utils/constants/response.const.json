@@ -565,5 +565,14 @@
         "text": "Invitación enviada con éxito."
       }
     ]
+  },
+  {
+    "code": 63,
+    "message": [
+      {
+        "iso": "es-ES",
+        "text": "Sesión creada con éxito."
+      }
+    ]
   }
 ]

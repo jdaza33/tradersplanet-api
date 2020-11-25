@@ -13,7 +13,7 @@ const stripe = require('stripe')(
 )
 console.log(process.env.NODE_ENV)
 
-module.exports = { newPayment, newPaymentWithSource }
+module.exports = { newPayment, newPaymentWithSource, newPaymentCheckout }
 
 function newPayment(data) {
   return new Promise(async (resolve, reject) => {
@@ -64,6 +64,31 @@ function newPaymentWithSource(data) {
     } catch (error) {
       console.log(error)
       reject(error)
+    }
+  })
+}
+
+function newPaymentCheckout(data) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            name: data.name,
+            images: [data.image],
+            amount: data.price,
+            currency: 'usd',
+            quantity: 1,
+          },
+        ],
+        success_url: data.success_url,
+        cancel_url: data.cancel_url,
+      })
+      return resolve(session)
+    } catch (error) {
+      console.log(error)
+      return reject(error)
     }
   })
 }
