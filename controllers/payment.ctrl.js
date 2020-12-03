@@ -16,7 +16,8 @@ const serviceStripe = require('../services/stripe.srv')
 module.exports = {
   create,
   createWithSource,
-  createSesion
+  createSesion,
+  getSession,
 }
 
 /**
@@ -74,9 +75,32 @@ async function createWithSource(req, res, next) {
 async function createSesion(req, res, next) {
   try {
     let data = req.body
-    console.log(data);
+    console.log(data)
 
     let sesion = await serviceStripe.newPaymentCheckout(data)
+
+    return res.status(200).send({
+      success: 1,
+      sesion,
+      error: null,
+      message: _util_response.getResponse(63, req.headers.iso),
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+async function getSession(req, res, next) {
+  try {
+    let { sessionId } = req.params
+
+    let sesion = await serviceStripe.getSessionId(sessionId)
 
     return res.status(200).send({
       success: 1,

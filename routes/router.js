@@ -149,6 +149,7 @@ router.post('/subscribers/list', subscriberCtrl.list)
 router.post('/payments/stripe/create', paymentCtrl.create)
 router.post('/payments/stripe/create-source', paymentCtrl.createWithSource)
 router.post('/payments/stripe/create/sesion', paymentCtrl.createSesion)
+router.get('/payments/stripe/sesion/:sessionId', paymentCtrl.getSession)
 
 /** Uploads */
 router.get('/file/:name', async (req, res, next) => {

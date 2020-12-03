@@ -13,7 +13,12 @@ const stripe = require('stripe')(
 )
 console.log(process.env.NODE_ENV)
 
-module.exports = { newPayment, newPaymentWithSource, newPaymentCheckout }
+module.exports = {
+  newPayment,
+  newPaymentWithSource,
+  newPaymentCheckout,
+  getSessionId,
+}
 
 function newPayment(data) {
   return new Promise(async (resolve, reject) => {
@@ -85,6 +90,22 @@ function newPaymentCheckout(data) {
         success_url: data.success_url,
         cancel_url: data.cancel_url,
       })
+      return resolve(session)
+    } catch (error) {
+      console.log(error)
+      return reject(error)
+    }
+  })
+}
+
+/**
+ *
+ * @param {string} sessionId
+ */
+function getSessionId(sessionId) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let session = await stripe.checkout.sessions.retrieve(sessionId)
       return resolve(session)
     } catch (error) {
       console.log(error)
