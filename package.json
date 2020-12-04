@@ -22,6 +22,7 @@
     "dotenv": "^8.2.0",
     "ejs": "^3.0.2",
     "express": "^4.17.1",
+    "express-paginate": "^1.0.2",
     "fs": "0.0.1-security",
     "fsp": "^0.1.2",
     "generate-password": "^1.5.1",
@@ -40,6 +41,7 @@
     "nodemailer-sendgrid": "^1.0.3",
     "path": "^0.12.7",
     "promise-fs": "^2.1.1",
+    "query-to-json": "0.0.2",
     "shelljs": "^0.8.3",
     "socket.io": "^2.3.0",
     "stripe": "^8.52.0"

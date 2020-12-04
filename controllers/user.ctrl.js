@@ -119,6 +119,8 @@ async function list(req, res, next) {
       .find(filters)
       .populate({ path: 'paidcourses' })
       .lean()
+      .skip(req.skip)
+      .limit(req.query.limit)
 
     // if (users.length === 0) {
     //   return res.status(200).send({
@@ -133,6 +135,7 @@ async function list(req, res, next) {
       data: { user: users },
       error: null,
       message: _util_response.getResponse(5, req.headers.iso),
+      paginate: await _util_response.responsePaginate(req, 'Users', filters),
     })
   } catch (error) {
     next(error)

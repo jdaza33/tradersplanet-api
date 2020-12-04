@@ -124,6 +124,8 @@ async function list(req, res, next) {
         select: '_id name lastname ocupation email role',
       })
       .sort({ createdAt: -1 })
+      .skip(req.skip)
+      .limit(req.query.limit)
       .lean()
 
     let ads = await Advertising.find({})
@@ -140,6 +142,7 @@ async function list(req, res, next) {
       data: { post: posts, advertising: ads },
       error: null,
       message: _util_response.getResponse(32, req.headers.iso),
+      paginate: await _util_response.responsePaginate(req, 'Posts', filters),
     })
   } catch (error) {
     next(error)

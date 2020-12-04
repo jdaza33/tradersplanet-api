@@ -4,6 +4,7 @@
 
 //Modules
 const express = require('express')
+const paginate = require('express-paginate')
 const cors = require('cors')
 const helmet = require('helmet')
 const router = require('./routes/router')
@@ -32,6 +33,7 @@ app.use(
     limit: '50mb',
   })
 )
+app.use(paginate.middleware(10, 50))
 
 app.use(
   bodyParser.urlencoded({

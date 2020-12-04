@@ -103,6 +103,8 @@ async function list(req, res, next) {
       .populate({ path: 'tutor', select: '_id name ocupation email role' })
       .sort({ order: -1 })
       .lean()
+      .skip(req.skip)
+      .limit(req.query.limit)
 
     // if (educations.length === 0) {
     //   return res.status(200).send({
@@ -117,6 +119,11 @@ async function list(req, res, next) {
       data: { education: educations },
       error: null,
       message: _util_response.getResponse(39, req.headers.iso),
+      paginate: await _util_response.responsePaginate(
+        req,
+        'Educations',
+        filters
+      ),
     })
   } catch (error) {
     next(error)

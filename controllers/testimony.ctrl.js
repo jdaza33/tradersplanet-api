@@ -96,10 +96,12 @@ async function list(req, res, next) {
       .find(filters)
       .populate({ path: 'educationId', select: '_id title' })
       .lean()
+      .skip(req.skip)
+      .limit(req.query.limit)
 
     testimonies = testimonies.map((t) => {
       let _t = { ...t }
-      _t.abrv = `${t.name}: ${t.content.substring(0,50)}`
+      _t.abrv = `${t.name}: ${t.content.substring(0, 50)}`
       return _t
     })
 
@@ -116,6 +118,11 @@ async function list(req, res, next) {
       data: { testimony: testimonies },
       error: null,
       message: _util_response.getResponse(25, req.headers.iso),
+      paginate: await _util_response.responsePaginate(
+        req,
+        'Testimonies',
+        filters
+      ),
     })
   } catch (error) {
     next(error)
