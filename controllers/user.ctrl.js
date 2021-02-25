@@ -339,7 +339,7 @@ async function payCourse(req, res, next) {
     }
 
     // Eliminamos
-    await mongoose.model('Users').findByIdAndUpdate(userId, {
+    user = await mongoose.model('Users').findByIdAndUpdate(userId, {
       $push: { paidcourses: courseId },
     })
 
