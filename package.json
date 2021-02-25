@@ -43,7 +43,7 @@
     "promise-fs": "^2.1.1",
     "query-to-json": "0.0.2",
     "shelljs": "^0.8.3",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.4.0",
     "stripe": "^8.52.0"
   },
   "devDependencies": {
