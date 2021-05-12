@@ -5,7 +5,6 @@
 'use strict'
 
 // Modules
-require('dotenv').config()
 const paginate = require('express-paginate')
 const mongoose = require('mongoose')
 const qs = require('query-to-json')

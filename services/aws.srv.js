@@ -2,24 +2,20 @@
  * @description Servicio para las conexiones con aws
  */
 
+//Modules
 const AWS = require('aws-sdk')
 const mime = require('mime')
 const fsp = require('promise-fs')
-require('dotenv').config()
-
-AWS.config.update({
-  accessKeyId: process.env.S3_KEY_ACCESS,
-  secretAccessKey: process.env.S3_KEY_SECRET,
-  region: 'us-east-1',
-})
-
-module.exports = {
-  uploadFileToS3,
-}
 
 function uploadFileToS3(file, model, modelId) {
   return new Promise(async (resolve, reject) => {
     try {
+      AWS.config.update({
+        accessKeyId: process.env.S3_KEY_ACCESS,
+        secretAccessKey: process.env.S3_KEY_SECRET,
+        region: 'us-east-1',
+      })
+
       let bucket = `${process.env.S3_BUCKET}/${model}`
       let ext = mime.getExtension(file.mimetype)
       let filename = `${modelId}.${ext}`
@@ -78,4 +74,8 @@ function uploadFileToS3(file, model, modelId) {
       reject(error)
     }
   })
+}
+
+module.exports = {
+  uploadFileToS3,
 }

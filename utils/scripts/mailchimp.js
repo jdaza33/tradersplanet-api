@@ -3,11 +3,10 @@
  */
 
 const Mailchimp = require('mailchimp-api-v3')
-require('dotenv').config()
-var mailchimp = new Mailchimp(process.env.API_KEY_MAILCHIMP)
 
 async function main() {
   try {
+    const mailchimp = new Mailchimp(process.env.API_KEY_MAILCHIMP)
     // await mailchimp.post(
     //   {
     //     path: '/campaigns/9375798/actions/test',

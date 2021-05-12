@@ -27,6 +27,7 @@ const subscriberCtrl = require('../controllers/subscriber.ctrl')
 const webhookCtrl = require('../controllers/webhook.ctrl')
 const paymentCtrl = require('../controllers/payment.ctrl')
 const advertisingCtrl = require('../controllers/advertising.ctrl')
+const discordCtrl = require('../controllers/discord.ctrl')
 
 //Multer
 const multer = require('multer')
@@ -179,9 +180,14 @@ router.get('/redirect/slack', async (req, res, next) => {
   }
 })
 
+/** Discord */
+
+router.get('/discord/auth', discordCtrl.auth)
+router.get('/discord/get-auth', discordCtrl.getUrlAuth)
+
 /** CRON */
 cron.schedule('* * * * *', () => {
-  webhookCtrl.taskStripeCourse()
+  // webhookCtrl.taskStripeCourse()
 })
 
 /** Middleware - Devuelve un error 404 si la ruta solicitada no está definida */

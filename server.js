@@ -25,30 +25,27 @@ const _util_error = require('./utils/error.util')
 mkdirp.sync(path.join(__dirname, 'files/'))
 
 //Middlewares
+app.set('view engine', 'html')
 app.use(cors())
-// app.use(express.json())
+app.use(express.json())
 // app.use(express.urlencoded())
-app.use(
-  bodyParser.json({
-    limit: '50mb',
-  })
-)
 app.use(paginate.middleware(10, 50))
-
-app.use(
-  bodyParser.urlencoded({
-    limit: '50mb',
-    parameterLimit: 100000,
-    extended: true,
-  })
-)
 app.use(helmet())
+
+//Loaders
+require('./loaders/dotenv.loader').startDotenv()
 
 //Database
 require('./config/db')
 
 //Routes
-app.use('/', router)
+app.use('/api', router)
+
+//Doc
+app.use(express.static(path.resolve(__dirname, './doc')))
+app.use('/doc', function (req, res) {
+  res.sendFile(path.join(__dirname, '/doc/index.html'))
+})
 
 /* MANEJO DE ERRORES DE EXPRESS */
 app.use(_util_error.errorHandler)

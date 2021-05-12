@@ -7,7 +7,6 @@ const nodemailer = require('nodemailer')
 const nodemailerSendgrid = require('nodemailer-sendgrid')
 const ejs = require('ejs')
 const path = require('path')
-require('dotenv').config()
 
 module.exports = {
   sendMail,

@@ -3,7 +3,6 @@
  */
 
 const shell = require('shelljs')
-require('dotenv').config()
 
 if (process.env.NODE_ENV == 'development') {
   let ex1 = shell.exec(

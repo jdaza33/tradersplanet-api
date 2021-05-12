@@ -7,7 +7,6 @@
 //Modules
 const mongoose = require('mongoose')
 const moment = require('moment')
-require('dotenv').config()
 
 //Instanciar el modelo
 const Subscriber = require('../models/subscriber')

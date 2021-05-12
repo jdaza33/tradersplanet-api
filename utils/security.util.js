@@ -5,7 +5,6 @@
 'use strict'
 
 // Modules
-require('dotenv').config()
 const bcrypt = require('bcryptjs')
 const jwt = require('jwt-simple')
 

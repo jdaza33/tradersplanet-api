@@ -1,0 +1,105 @@
+/**
+ * @description Controlador para discord
+ */
+
+'use strict'
+
+//Modules
+const mongoose = require('mongoose')
+const path = require('path')
+
+//Utils
+const _util_response = require('../utils/response.util')
+
+//Services
+const {
+  getToken,
+  getUser,
+  saveUserDiscord,
+} = require('../services/discord.srv')
+
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+async function test(req, res, next) {
+  try {
+    console.log('body', req.body)
+    console.log('params', req.params)
+    console.log('query', req.query)
+
+    return res.status(200).send({
+      success: 1,
+      data: null,
+      error: null,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+/**
+ * @api {post} /discord/get-url/ Obtener el enlace de autorizacion y redirigir
+ * @apiName GetUrlAuth
+ * @apiGroup Discord
+ *
+ * @apiParam {Number} id User's unique ID.
+ *
+ * @apiSuccess {String} firstname Firstname of the User.
+ * @apiSuccess {String} lastname  Lastname of the User.
+ */
+async function getUrlAuth(req, res, next) {
+  try {
+    let { userId } = req.query
+    console.log(req.query)
+
+    if (!userId || userId == '') next('El campo userId es requerido')
+
+    let url = `${process.env.URL_ACCESS_DISCORD}&state=${userId}`
+    // url = url.replace('burib', redirect_url)
+
+    return res.redirect(url)
+  } catch (error) {
+    next(error)
+  }
+}
+
+async function auth(req, res, next) {
+  try {
+    let { code, state: userId } = req.query
+    console.log(req.query)
+
+    //Obtenemos los tokens
+    let { access_token, expires_in, refresh_token } = await getToken(code)
+
+    //Obtenemos los datos del usuario
+    let { id: discordId } = await getUser(access_token)
+    let exp = Date.now() + expires_in
+
+    //Almacenamos la informacion
+    await saveUserDiscord(userId, discordId, access_token, refresh_token, exp)
+
+    path.join(path.resolve(__dirname, '../'), 'views/success-auth.html')
+    res.sendFile(
+      path.join(path.resolve(__dirname, '../'), 'views/success-auth.html')
+    )
+
+    // return res.status(200).send({
+    //   success: 1,
+    //   error: null,
+    // })
+  } catch (error) {
+    res.sendFile(
+      path.join(path.resolve(__dirname, '../'), 'views/error-auth.html')
+    )
+    // next(error)
+  }
+}
+
+module.exports = {
+  test,
+  getUrlAuth,
+  auth,
+}

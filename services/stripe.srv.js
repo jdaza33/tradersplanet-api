@@ -2,27 +2,14 @@
  * @descripcion Servicio de stripe
  */
 
-'use strict'
-
-require('dotenv').config()
-
-const stripe = require('stripe')(
-  process.env.NODE_ENV == 'production'
-    ? process.env.KEY_SECRET_STRIPE
-    : process.env.TEST_KEY_SECRET_STRIPE
-)
-console.log(process.env.NODE_ENV)
-
-module.exports = {
-  newPayment,
-  newPaymentWithSource,
-  newPaymentCheckout,
-  getSessionId,
-}
+//Modules
+const Stripe = require('stripe')
 
 function newPayment(data) {
   return new Promise(async (resolve, reject) => {
     try {
+      const stripe = Stripe(process.env.KEY_SECRET_STRIPE)
+
       //Create token
       let token = await stripe.tokens.create({
         card: {
@@ -53,6 +40,7 @@ function newPayment(data) {
 function newPaymentWithSource(data) {
   return new Promise(async (resolve, reject) => {
     try {
+      const stripe = Stripe(process.env.KEY_SECRET_STRIPE)
       let charge = await stripe.charges.create({
         amount: Math.round(data.amount * 100),
         currency: 'usd',
@@ -76,6 +64,7 @@ function newPaymentWithSource(data) {
 function newPaymentCheckout(data) {
   return new Promise(async (resolve, reject) => {
     try {
+      const stripe = Stripe(process.env.KEY_SECRET_STRIPE)
       let session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [
@@ -105,6 +94,7 @@ function newPaymentCheckout(data) {
 function getSessionId(sessionId) {
   return new Promise(async (resolve, reject) => {
     try {
+      const stripe = Stripe(process.env.KEY_SECRET_STRIPE)
       let session = await stripe.checkout.sessions.retrieve(sessionId)
       return resolve(session)
     } catch (error) {
@@ -112,4 +102,11 @@ function getSessionId(sessionId) {
       return reject(error)
     }
   })
+}
+
+module.exports = {
+  newPayment,
+  newPaymentWithSource,
+  newPaymentCheckout,
+  getSessionId,
 }

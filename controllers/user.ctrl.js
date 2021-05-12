@@ -8,7 +8,6 @@
 const mongoose = require('mongoose')
 const generator = require('generate-password')
 const moment = require('moment')
-require('dotenv').config()
 
 //Instanciar el modelo
 const User = require('../models/user')

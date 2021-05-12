@@ -3,17 +3,11 @@
  */
 
 const Mailchimp = require('mailchimp-api-v3')
-require('dotenv').config()
-var mailchimp = new Mailchimp(process.env.API_KEY_MAILCHIMP)
-
-module.exports = {
-  listAudiences,
-  addMemberToAudience,
-}
 
 function listAudiences() {
   return new Promise(async (resolve, reject) => {
     try {
+      const mailchimp = new Mailchimp(process.env.API_KEY_MAILCHIMP)
       mailchimp.get(
         {
           path: '/lists',
@@ -33,6 +27,7 @@ function listAudiences() {
 function addMemberToAudience(name, email, audienceId) {
   return new Promise(async (resolve, reject) => {
     try {
+      const mailchimp = new Mailchimp(process.env.API_KEY_MAILCHIMP)
       mailchimp.post(
         {
           path: `/lists/${audienceId}/members`,
@@ -54,4 +49,9 @@ function addMemberToAudience(name, email, audienceId) {
       reject(error)
     }
   })
+}
+
+module.exports = {
+  listAudiences,
+  addMemberToAudience,
 }
