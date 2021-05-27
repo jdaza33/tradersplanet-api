@@ -13,7 +13,8 @@ const Service = new Schema({
     content: { type: String, trim: true },
     tutor: { type: String, trim: true },
     published: Boolean,
-    price: { type: String, trim: true }
+    price: { type: String, trim: true },
+    stripeId: { type: String, trim: true },
 })
 
 Service.plugin(timestamp)

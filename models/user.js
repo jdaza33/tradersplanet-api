@@ -35,6 +35,9 @@ const User = new Schema({
   discordId: { type: String, required: false },
   discordTokens: { type: Tokens, required: false },
 
+  //Stripe
+  stripeId: { type: String, required: false },
+
   /**
    * @deprecated
    */

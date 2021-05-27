@@ -22,6 +22,7 @@ const Subscription = new Schema({
   active: { type: Boolean, default: true, required: true },
   createdAt: { type: Number, required: true }, //Fecha en milisegundos
   createdBy: { type: String, required: false, trim: true, ref: 'Users' },
+  stripeId: { type: String, trim: true },
 })
 
 module.exports = mongoose.model('Subscriptions', Subscription)

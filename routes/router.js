@@ -28,6 +28,10 @@ const webhookCtrl = require('../controllers/webhook.ctrl')
 const paymentCtrl = require('../controllers/payment.ctrl')
 const advertisingCtrl = require('../controllers/advertising.ctrl')
 const discordCtrl = require('../controllers/discord.ctrl')
+const subscriptionCtrl = require('../controllers/subscription.ctrl')
+
+//Middlewares
+const { isAuth } = require('../middlewares/auth.middleware')
 
 //Multer
 const multer = require('multer')
@@ -72,7 +76,7 @@ router.delete('/lessons/:id', lessonCtrl.del)
 
 /** Educations */
 router.post('/educations/create', educationCtrl.create)
-router.post('/educations/list', educationCtrl.list)
+router.post('/educations/list', isAuth, educationCtrl.list)
 router.get('/educations/:id', educationCtrl.get)
 router.put('/educations/:id', educationCtrl.edit)
 router.put('/educations/move/:id', educationCtrl.move)
@@ -97,7 +101,7 @@ router.post(
 
 /** Services */
 router.post('/services/create', serviceCtrl.create)
-router.post('/services/list', serviceCtrl.list)
+router.post('/services/list', isAuth, serviceCtrl.list)
 router.get('/services/:id', serviceCtrl.get)
 router.put('/services/:id', serviceCtrl.edit)
 router.delete('/services/:id', serviceCtrl.del)
@@ -147,10 +151,18 @@ router.post('/subscribers/create', subscriberCtrl.create)
 router.post('/subscribers/list', subscriberCtrl.list)
 
 /** Payments */
-router.post('/payments/stripe/create', paymentCtrl.create)
-router.post('/payments/stripe/create-source', paymentCtrl.createWithSource)
-router.post('/payments/stripe/create/sesion', paymentCtrl.createSesion)
-router.get('/payments/stripe/sesion/:sessionId', paymentCtrl.getSession)
+router.post('/payments/stripe/create', paymentCtrl.payWithStripe)
+
+/** Subscriptions */
+router.post('/subscriptions/create', subscriptionCtrl.create)
+router.post('/subscriptions/list', isAuth, subscriptionCtrl.list)
+
+/**
+ * @deprecated 25052021
+ */
+// router.post('/payments/stripe/create-source', paymentCtrl.createWithSource)
+// router.post('/payments/stripe/create/sesion', paymentCtrl.createSesion)
+// router.get('/payments/stripe/sesion/:sessionId', paymentCtrl.getSession)
 
 /** Uploads */
 router.get('/file/:name', async (req, res, next) => {

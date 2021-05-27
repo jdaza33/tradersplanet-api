@@ -7,12 +7,13 @@
 // Modules
 const bcrypt = require('bcryptjs')
 const jwt = require('jwt-simple')
+const moment = require('moment')
 
 module.exports = {
   encryptPassword,
   comparePassword,
   encodeUser,
-  decodeToken
+  decodeToken,
 }
 
 /**
@@ -51,7 +52,7 @@ function encodeUser(userId, role) {
     let payload = {
       id: userId,
       role,
-      exp: 1440 //min
+      exp: moment().add(1, 'days').valueOf(), //ms
     }
     return jwt.encode(payload, process.env.SECRET_JWT)
   } catch (error) {

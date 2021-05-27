@@ -13,14 +13,19 @@ const Education = new Schema({
   tutor: { type: String, trim: true, ref: 'Users' },
   published: { type: Boolean, default: false },
   price: Number,
-  offprice: { type: Number, default: 0 },
   short_description: String,
   large_description: String,
   learn: [String],
   img: String,
   tags: [String],
   requirements: [String],
-  order: {type: Number, required: true}
+  order: { type: Number, required: true },
+  stripeId: { type: String, trim: true },
+
+  /**
+   * @deprecated
+   */
+  offprice: { type: Number, default: 0 },
 })
 
 Education.plugin(timestamp)

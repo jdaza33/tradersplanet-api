@@ -88,10 +88,15 @@ async function get(req, res, next) {
 }
 
 /**
+ * @api {post} /educations/list Listar cursos
+ * @apiName listEducations
+ * @apiGroup Educations
+ * @apiDescription Servicio para listar los cursos,
+ * tambien lista las tarjetas del usuario en caso de que posea
+ * @apiVersion 1.0.0
  *
- * @param {*} req
- * @param {*} res
- * @param {*} next
+ * @apiHeader {String} authorization Bearer {token}
+ *
  */
 async function list(req, res, next) {
   try {
@@ -106,17 +111,9 @@ async function list(req, res, next) {
       .skip(req.skip)
       .limit(req.query.limit)
 
-    // if (educations.length === 0) {
-    //   return res.status(200).send({
-    //     success: 0,
-    //     data: null,
-    //     error: _util_response.getResponse(41, req.headers.iso)
-    //   })
-    // }
-
     return res.status(200).send({
       success: 1,
-      data: { education: educations },
+      data: { education: educations, user: req.user },
       error: null,
       message: _util_response.getResponse(39, req.headers.iso),
       paginate: await _util_response.responsePaginate(

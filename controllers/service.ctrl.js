@@ -15,7 +15,7 @@ module.exports = {
   get,
   list,
   del,
-  edit
+  edit,
 }
 
 /**
@@ -34,7 +34,7 @@ async function create(req, res, next) {
       success: 1,
       data: { service: serviceCreated },
       error: null,
-      message: _util_response.getResponse(42, req.headers.iso)
+      message: _util_response.getResponse(42, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -58,7 +58,7 @@ async function get(req, res, next) {
         success: 0,
         data: null,
         error: null,
-        message: _util_response.getResponse(47, req.headers.iso)
+        message: _util_response.getResponse(47, req.headers.iso),
       })
     }
 
@@ -66,7 +66,7 @@ async function get(req, res, next) {
       success: 1,
       data: { service },
       error: null,
-      message: _util_response.getResponse(45, req.headers.iso)
+      message: _util_response.getResponse(45, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -74,10 +74,15 @@ async function get(req, res, next) {
 }
 
 /**
+ * @api {post} /services/list Listar servicios
+ * @apiName listServices
+ * @apiGroup Services
+ * @apiDescription Servicio para listar los servicios,
+ * tambien lista las tarjetas del usuario en caso de que posea
+ * @apiVersion 1.0.0
  *
- * @param {*} req
- * @param {*} res
- * @param {*} next
+ * @apiHeader {String} authorization Bearer {token}
+ *
  */
 async function list(req, res, next) {
   try {
@@ -89,7 +94,7 @@ async function list(req, res, next) {
       return res.status(200).send({
         success: 0,
         data: null,
-        error: _util_response.getResponse(48, req.headers.iso)
+        error: _util_response.getResponse(48, req.headers.iso),
       })
     }
 
@@ -97,7 +102,7 @@ async function list(req, res, next) {
       success: 1,
       data: { service: services },
       error: null,
-      message: _util_response.getResponse(46, req.headers.iso)
+      message: _util_response.getResponse(46, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -121,7 +126,7 @@ async function del(req, res, next) {
       return res.status(403).send({
         success: 0,
         data: null,
-        error: _util_response.getResponse(47, req.headers.iso)
+        error: _util_response.getResponse(47, req.headers.iso),
       })
     }
 
@@ -132,7 +137,7 @@ async function del(req, res, next) {
       success: 1,
       data: { service },
       error: null,
-      message: _util_response.getResponse(44, req.headers.iso)
+      message: _util_response.getResponse(44, req.headers.iso),
     })
   } catch (error) {
     next(error)
@@ -157,7 +162,7 @@ async function edit(req, res, next) {
       return res.status(403).send({
         success: 0,
         data: null,
-        error: _util_response.getResponse(47, req.headers.iso)
+        error: _util_response.getResponse(47, req.headers.iso),
       })
     }
 
@@ -169,7 +174,7 @@ async function edit(req, res, next) {
       success: 1,
       data: { service: serviceUpdated },
       error: null,
-      message: _util_response.getResponse(43, req.headers.iso)
+      message: _util_response.getResponse(43, req.headers.iso),
     })
   } catch (error) {
     next(error)

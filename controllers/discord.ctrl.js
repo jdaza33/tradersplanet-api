@@ -41,14 +41,16 @@ async function test(req, res, next) {
 }
 
 /**
- * @api {post} /discord/get-url/ Obtener el enlace de autorizacion y redirigir
+ * @api {post} /discord/get-url/ Obtener el enlace de autorizacion a discord y redirigir
  * @apiName GetUrlAuth
  * @apiGroup Discord
+ * @apiDescription Servicio para redirigir al usuario a la plataforma de discord para que apruebe la autorizacion de Tplanet
+ * @apiVersion 1.0.0
+ *
+ * @apiHeader {String} authorization Bearer {token}
  *
  * @apiParam {Number} id User's unique ID.
  *
- * @apiSuccess {String} firstname Firstname of the User.
- * @apiSuccess {String} lastname  Lastname of the User.
  */
 async function getUrlAuth(req, res, next) {
   try {
