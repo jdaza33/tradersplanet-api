@@ -2,6 +2,9 @@
  * @description Servidor principal
  */
 
+//Loaders
+require('./loaders/dotenv.loader').startDotenv()
+
 //Modules
 const express = require('express')
 const paginate = require('express-paginate')
@@ -32,8 +35,6 @@ app.use(express.json())
 app.use(paginate.middleware(10, 50))
 app.use(helmet())
 
-//Loaders
-require('./loaders/dotenv.loader').startDotenv()
 
 //Database
 require('./config/db')
