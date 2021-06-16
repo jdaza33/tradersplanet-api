@@ -51,7 +51,8 @@ async function create(req, res, next) {
  * tambien lista las tarjetas del usuario en caso de que posea
  * @apiVersion 1.0.0
  *
- * @apiHeader {String} authorization Bearer {token}
+ * @apiHeader {String} [userId] Cuando el usuario este logueado, se debe enviar su ID para verificar su cuenta
+ * @apiHeader {String} iso Lenguaje del usuario, por defecto = "es"
  *
  */
 async function list(req, res, next) {

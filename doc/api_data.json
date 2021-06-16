@@ -50,9 +50,16 @@
           {
             "group": "Header",
             "type": "String",
+            "optional": true,
+            "field": "userId",
+            "description": "<p>Cuando el usuario este logueado, se debe enviar su ID para verificar su cuenta</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
             "optional": false,
-            "field": "authorization",
-            "description": "<p>Bearer {token}</p>"
+            "field": "iso",
+            "description": "<p>Lenguaje del usuario, por defecto = &quot;es&quot;</p>"
           }
         ]
       }
@@ -77,6 +84,13 @@
             "optional": false,
             "field": "authorization",
             "description": "<p>Bearer {token}</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "iso",
+            "description": "<p>Lenguaje del usuario, por defecto = &quot;es&quot;</p>"
           }
         ]
       }
@@ -107,6 +121,13 @@
             "group": "Parameter",
             "type": "String",
             "optional": false,
+            "field": "typePayment",
+            "description": "<p>Ocurrencia del pago, solo aplica para suscripciones</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
             "field": "userId",
             "description": "<p>ID del usuario que realiza el pago</p>"
           },
@@ -119,17 +140,10 @@
           },
           {
             "group": "Parameter",
-            "type": "Object",
-            "allowedValues": [
-              "{\"number\"",
-              "\"exp_month\"",
-              "\"exp_year\"",
-              "\"cvc\"",
-              "\"name\"}"
-            ],
+            "type": "String",
             "optional": true,
-            "field": "card",
-            "description": "<p>En caso de que isNew sea falso, entonces se envia los datos de la tarjeta</p>"
+            "field": "source",
+            "description": "<p>En caso de que isNew sea falso, entonces se envia el source de la tarjeta</p>"
           },
           {
             "group": "Parameter",
@@ -137,13 +151,20 @@
             "optional": true,
             "field": "coupon",
             "description": "<p>Codigo de descuento, en caso de que el usuario lo tenga.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "saveCard",
+            "description": "<p>Si desea guardar la tarjeta</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Request-Example:",
-          "content": "{\n type: \"education\",\n typeId: \"123456789\",\n userId: \"123456789\",\n isNew: true,\n coupon: 'FREEALL2021'\n card: {\n   number: \"4242424242424242\",\n   exp_month: 10,\n   exp_year: 2021,\n   cvc: 123,\n   name: \"Jose Bolivar\"\n }\n}",
+          "content": "{\n type: \"education\",\n typeId: \"123456789\",\n typePayment: \"monthly\"\n userId: \"123456789\",\n isNew: true,\n coupon: 'FREEALL2021'\n source: 'source_123456789'\n saveCard: true\n}",
           "type": "json"
         }
       ]
@@ -165,9 +186,16 @@
           {
             "group": "Header",
             "type": "String",
+            "optional": true,
+            "field": "userId",
+            "description": "<p>Cuando el usuario este logueado, se debe enviar su ID para verificar su cuenta</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
             "optional": false,
-            "field": "authorization",
-            "description": "<p>Bearer {token}</p>"
+            "field": "iso",
+            "description": "<p>Lenguaje del usuario, por defecto = &quot;es&quot;</p>"
           }
         ]
       }
@@ -189,9 +217,16 @@
           {
             "group": "Header",
             "type": "String",
+            "optional": true,
+            "field": "userId",
+            "description": "<p>Cuando el usuario este logueado, se debe enviar su ID para verificar su cuenta</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
             "optional": false,
-            "field": "authorization",
-            "description": "<p>Bearer {token}</p>"
+            "field": "iso",
+            "description": "<p>Lenguaje del usuario, por defecto = &quot;es&quot;</p>"
           }
         ]
       }

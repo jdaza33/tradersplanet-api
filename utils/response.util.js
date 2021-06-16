@@ -59,7 +59,7 @@ function responsePaginate(
           .toArray()
         totalData = tmpdata.length
       } else {
-        totalData = await mongoose.model(model).count(filters)
+        totalData = await mongoose.model(model).countDocuments(filters)
       }
 
       let pageCount = Math.ceil(totalData / req.query.limit)

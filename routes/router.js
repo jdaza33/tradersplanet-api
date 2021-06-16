@@ -29,6 +29,7 @@ const paymentCtrl = require('../controllers/payment.ctrl')
 const advertisingCtrl = require('../controllers/advertising.ctrl')
 const discordCtrl = require('../controllers/discord.ctrl')
 const subscriptionCtrl = require('../controllers/subscription.ctrl')
+const promotionCtrl = require('../controllers/promotion.ctrl')
 
 //Middlewares
 const { isAuth } = require('../middlewares/auth.middleware')
@@ -76,7 +77,7 @@ router.delete('/lessons/:id', lessonCtrl.del)
 
 /** Educations */
 router.post('/educations/create', educationCtrl.create)
-router.post('/educations/list', isAuth, educationCtrl.list)
+router.post('/educations/list', educationCtrl.list)
 router.get('/educations/:id', educationCtrl.get)
 router.put('/educations/:id', educationCtrl.edit)
 router.put('/educations/move/:id', educationCtrl.move)
@@ -101,7 +102,7 @@ router.post(
 
 /** Services */
 router.post('/services/create', serviceCtrl.create)
-router.post('/services/list', isAuth, serviceCtrl.list)
+router.post('/services/list', serviceCtrl.list)
 router.get('/services/:id', serviceCtrl.get)
 router.put('/services/:id', serviceCtrl.edit)
 router.delete('/services/:id', serviceCtrl.del)
@@ -155,7 +156,11 @@ router.post('/payments/stripe/create', paymentCtrl.payWithStripe)
 
 /** Subscriptions */
 router.post('/subscriptions/create', subscriptionCtrl.create)
-router.post('/subscriptions/list', isAuth, subscriptionCtrl.list)
+router.post('/subscriptions/list', subscriptionCtrl.list)
+
+/** Subscriptions */
+router.post('/promotions/create', promotionCtrl.create)
+router.post('/promotions/list', promotionCtrl.list)
 
 /**
  * @deprecated 25052021

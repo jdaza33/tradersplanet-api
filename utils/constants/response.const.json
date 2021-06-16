@@ -619,5 +619,32 @@
         "text": "El token expiró."
       }
     ]
+  },
+  {
+    "code": 69,
+    "message": [
+      {
+        "iso": "es",
+        "text": "type invalido"
+      }
+    ]
+  },
+  {
+    "code": 70,
+    "message": [
+      {
+        "iso": "es",
+        "text": "Promoción creada con éxito"
+      }
+    ]
+  },
+  {
+    "code": 71,
+    "message": [
+      {
+        "iso": "es",
+        "text": "Promociones listadas con éxito"
+      }
+    ]
   }
 ]

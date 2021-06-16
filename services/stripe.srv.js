@@ -265,13 +265,13 @@ function getCustomer(customerId) {
   })
 }
 
-function addCardToCustomer(customerId, number, exp_month, exp_year, cvc, name) {
+function addCardToCustomer(customerId, source) {
   return new Promise(async (resolve, reject) => {
     try {
       const stripe = Stripe(process.env.KEY_SECRET_STRIPE)
 
       let card = await stripe.customers.createSource(customerId, {
-        source: { number, exp_month, exp_year, cvc, name },
+        source,
       })
 
       return resolve(card)
