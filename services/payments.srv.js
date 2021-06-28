@@ -22,8 +22,8 @@ const newPayment = ({
   isNew,
   source,
   coupon,
-  typePayment,
   useCard,
+  priceId,
 }) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -31,8 +31,8 @@ const newPayment = ({
         createCustomer,
         getCustomer,
         addCardToCustomer,
-        listPriceProduct,
         newPaymentWithSource,
+        newPaymentSubscription,
       } = require('../services/stripe.srv')
 
       //Creamos el usuario si aplica
@@ -44,26 +44,52 @@ const newPayment = ({
         let { id: cardId } = await addCardToCustomer(customer.id, source)
         source = cardId
       } else {
-        if (!useCard) return reject(_util_response.getResponse(73))
+        if (!type == 'subscription' && !useCard)
+          return reject(_util_response.getResponse(76))
 
         customer = await getCustomer({ userId })
         source = useCard
       }
 
-      //Obtenemos el precio
-      let { price, stripeId: productId } = await checkPriceModel(
-        type,
-        typeId,
-        typePayment,
-        coupon
-      )
-
+      let payment = null
       let pay = null
 
       //Realizamos el pago
       if (type == 'subscription') {
+        payment = await newPaymentSubscription(customer.id, priceId)
+
+        let sub = await Subscription.findOne(
+          { _id: typeId },
+          { payments: 1 }
+        ).lean()
+
+        let objPayment = sub.payments.find((p) => p.priceId == priceId)
+        let exp = 0
+        if (objPayment) {
+          if (objPayment.type == 'monthly') moment().add(1, 'month')
+          if (objPayment.type == 'quarterly') moment().add(3, 'month')
+          if (objPayment.type == 'yearly') moment().add(1, 'year')
+        }
+
+        pay = await Payment.create({
+          pay: { id: payment.id, type: 'stripe' },
+          userId,
+          amount: objPayment ? objPayment.price : 0,
+          payFor: { id: typeId, payFor: type },
+          createdAt: moment().valueOf(),
+          expireAt: exp,
+          createdBy: userId,
+        })
       } else {
-        let payment = await newPaymentWithSource(
+        //Obtenemos el precio
+        let { price, stripeId: productId } = await checkPriceModel(
+          type,
+          typeId,
+          typePayment,
+          coupon
+        )
+
+        payment = await newPaymentWithSource(
           price,
           source,
           customer.id,
@@ -76,7 +102,7 @@ const newPayment = ({
           amount: price,
           payFor: { id: typeId, payFor: type },
           createdAt: moment().valueOf(),
-          expireAt: moment().add(20, 'year'),
+          expireAt: 0,
           createdBy: userId,
         })
       }

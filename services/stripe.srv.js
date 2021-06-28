@@ -25,6 +25,7 @@ module.exports = {
   addCardToCustomer,
   getCardsCustomer,
   createSource,
+  newPaymentSubscription
 }
 
 function createSource({ number, exp_month, exp_year, cvc, name, customer }) {
@@ -114,22 +115,17 @@ function newPaymentWithSource(amount, source, customerId, productId) {
   })
 }
 
-
- function newPaymentSubscription(amount, source, customerId, productId) {
+function newPaymentSubscription(customerId, priceId) {
   return new Promise(async (resolve, reject) => {
     try {
       const stripe = Stripe(process.env.KEY_SECRET_STRIPE)
-      let charge = await stripe.charges.create({
-        amount: Math.round(amount * 100),
-        currency: process.env.CURRENCY_DEFAULT,
-        source: source,
+
+      const subscription = await stripe.subscriptions.create({
         customer: customerId,
-        metadata: {
-          productId,
-        },
+        items: [{ price: priceId }],
       })
 
-      resolve(charge)
+      resolve(subscription)
     } catch (error) {
       console.log(error)
       reject(error)
@@ -253,6 +249,7 @@ function createPriceProduct(productId, type, price, obj) {
             unit_amount: payment.price * 100,
             currency: process.env.CURRENCY_DEFAULT,
             product: productId,
+            metadata: { paymentId: payment._id.toString() },
             recurring:
               payment.type == 'singlePayment'
                 ? null
@@ -267,6 +264,11 @@ function createPriceProduct(productId, type, price, obj) {
                         : 3,
                   },
           })
+
+          await Subscription.updateOne(
+            { _id: obj._id, 'payments._id': payment._id },
+            { $set: { 'payments.$.priceId': priceProduct.id } }
+          )
         }
       }
       return resolve(priceProduct)
@@ -434,9 +436,9 @@ function getCardsCustomer(customerId) {
 
 // stripe.prices
 //   .list({
-//     product: 'prod_FTggw5ZSDj6ElC',
+//     product: 'prod_JkaLjBOVgylVwB',
 //   })
-//   .then((res) => console.log(JSON.stringify(res)))
+//   .then((res) => console.log(res))
 
 // stripe.prices
 //   .create({

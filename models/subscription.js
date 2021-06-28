@@ -14,6 +14,7 @@ const Payments = new Schema({
     enum: ['monthly', 'quarterly', 'yearly', 'singlePayment'],
     required: true,
   },
+  priceId: { type: String, required: false },
 })
 
 const Subscription = new Schema({

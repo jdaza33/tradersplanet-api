@@ -682,5 +682,23 @@
         "text": "El campo useCard es requerido solo si isNew es falso. "
       }
     ]
+  },
+  {
+    "code": 77,
+    "message": [
+      {
+        "iso": "es",
+        "text": "El campo typePayment es requerido para iniciar una suscripcion"
+      }
+    ]
+  },
+  {
+    "code": 78,
+    "message": [
+      {
+        "iso": "es",
+        "text": "typePayment invalido"
+      }
+    ]
   }
 ]
