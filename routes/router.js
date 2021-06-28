@@ -32,7 +32,7 @@ const subscriptionCtrl = require('../controllers/subscription.ctrl')
 const promotionCtrl = require('../controllers/promotion.ctrl')
 
 //Middlewares
-const { isAuth } = require('../middlewares/auth.middleware')
+const { isAuth, isUser } = require('../middlewares/middleware')
 
 //Multer
 const multer = require('multer')
@@ -54,10 +54,10 @@ let _upload = multer({ storage: storageFile })
 
 /** Users */
 router.post('/users/create', userCtrl.create)
-router.post('/users/list', userCtrl.list)
-router.get('/users/:id', userCtrl.get)
-router.put('/users/:id', userCtrl.edit)
-router.delete('/users/:id', userCtrl.del)
+router.post('/users/list', isAuth, userCtrl.list)
+router.get('/users/:id', isAuth, userCtrl.get)
+router.put('/users/:id', isAuth, userCtrl.edit)
+router.delete('/users/:id', isAuth, userCtrl.del)
 router.post('/users/login', userCtrl.login)
 router.post('/users/reset', userCtrl.resetPassword)
 router.post(
@@ -65,23 +65,14 @@ router.post(
   _upload.single('file'),
   userCtrl.setPhoto
 )
-router.put('/users/pay/course/:id/:courseId', userCtrl.payCourse)
-router.get('/users/invite/slack/:id', userCtrl.inviteToSlack)
-
-/** Lessons */
-router.post('/lessons/create', lessonCtrl.create)
-router.post('/lessons/list', lessonCtrl.list)
-router.get('/lessons/:id', lessonCtrl.get)
-router.put('/lessons/:id', lessonCtrl.edit)
-router.delete('/lessons/:id', lessonCtrl.del)
 
 /** Educations */
-router.post('/educations/create', educationCtrl.create)
-router.post('/educations/list', educationCtrl.list)
-router.get('/educations/:id', educationCtrl.get)
-router.put('/educations/:id', educationCtrl.edit)
-router.put('/educations/move/:id', educationCtrl.move)
-router.delete('/educations/:id', educationCtrl.del)
+router.post('/educations/create', isAuth, educationCtrl.create)
+router.post('/educations/list', isUser, educationCtrl.list)
+router.get('/educations/:id', isUser, educationCtrl.get)
+router.put('/educations/:id', isAuth, educationCtrl.edit)
+router.put('/educations/move/:id', isAuth, educationCtrl.move)
+router.delete('/educations/:id', isAuth, educationCtrl.del)
 router.post(
   '/educations/upload/img/:id',
   _upload.single('file'),
@@ -89,11 +80,11 @@ router.post(
 )
 
 /** Posts */
-router.post('/posts/create', postCtrl.create)
+router.post('/posts/create', isAuth, postCtrl.create)
 router.post('/posts/list', postCtrl.list)
 router.get('/posts/:id', postCtrl.get)
-router.put('/posts/:id', postCtrl.edit)
-router.delete('/posts/:id', postCtrl.del)
+router.put('/posts/:id', isAuth, postCtrl.edit)
+router.delete('/posts/:id', isAuth, postCtrl.del)
 router.post(
   '/posts/upload/background/:id',
   _upload.single('file'),
@@ -101,25 +92,25 @@ router.post(
 )
 
 /** Services */
-router.post('/services/create', serviceCtrl.create)
-router.post('/services/list', serviceCtrl.list)
-router.get('/services/:id', serviceCtrl.get)
-router.put('/services/:id', serviceCtrl.edit)
-router.delete('/services/:id', serviceCtrl.del)
+router.post('/services/create', isAuth, serviceCtrl.create)
+router.post('/services/list', isUser, serviceCtrl.list)
+router.get('/services/:id', isUser, serviceCtrl.get)
+router.put('/services/:id', isAuth, serviceCtrl.edit)
+router.delete('/services/:id', isAuth, serviceCtrl.del)
 
 /** Testimonies */
 router.post('/testimonies/create', testimonyCtrl.create)
 router.post('/testimonies/list', testimonyCtrl.list)
 router.get('/testimonies/:id', testimonyCtrl.get)
-router.put('/testimonies/:id', testimonyCtrl.edit)
-router.delete('/testimonies/:id', testimonyCtrl.del)
+router.put('/testimonies/:id', isAuth, testimonyCtrl.edit)
+router.delete('/testimonies/:id', isAuth, testimonyCtrl.del)
 
 /** Advertising */
-router.post('/advertisings/create', advertisingCtrl.create)
+router.post('/advertisings/create', isAuth, advertisingCtrl.create)
 router.post('/advertisings/list', advertisingCtrl.list)
 router.get('/advertisings/:id', advertisingCtrl.get)
-router.put('/advertisings/:id', advertisingCtrl.edit)
-router.delete('/advertisings/:id', advertisingCtrl.del)
+router.put('/advertisings/:id', isAuth, advertisingCtrl.edit)
+router.delete('/advertisings/:id', isAuth, advertisingCtrl.del)
 router.post(
   '/advertisings/upload/image/:id/:op',
   _upload.single('file'),
@@ -148,26 +139,38 @@ router.post('/webhook', webhookCtrl.main)
 router.post('/webhook/stripe', webhookCtrl.stripe)
 
 /** Subscribers */
-router.post('/subscribers/create', subscriberCtrl.create)
+router.post('/subscribers/create', isAuth, subscriberCtrl.create)
 router.post('/subscribers/list', subscriberCtrl.list)
 
 /** Payments */
-router.post('/payments/stripe/create', paymentCtrl.payWithStripe)
+router.post('/payments/stripe/create', isAuth, paymentCtrl.payWithStripe)
+router.post('/payments/source/create', isAuth, paymentCtrl.createSourceCard)
 
 /** Subscriptions */
-router.post('/subscriptions/create', subscriptionCtrl.create)
-router.post('/subscriptions/list', subscriptionCtrl.list)
+router.post('/subscriptions/create', isAuth, subscriptionCtrl.create)
+router.post('/subscriptions/list', isUser, subscriptionCtrl.list)
+router.post('/subscriptions/:id', isUser, subscriptionCtrl.get)
 
 /** Subscriptions */
-router.post('/promotions/create', promotionCtrl.create)
+router.post('/promotions/create', isAuth, promotionCtrl.create)
 router.post('/promotions/list', promotionCtrl.list)
 
 /**
- * @deprecated 25052021
+ * @deprecated
  */
+/** Payments */
 // router.post('/payments/stripe/create-source', paymentCtrl.createWithSource)
 // router.post('/payments/stripe/create/sesion', paymentCtrl.createSesion)
 // router.get('/payments/stripe/sesion/:sessionId', paymentCtrl.getSession)
+/** Users */
+// router.put('/users/pay/course/:id/:courseId', userCtrl.payCourse)
+// router.get('/users/invite/slack/:id', userCtrl.inviteToSlack)
+/** Lessons */
+// router.post('/lessons/create', lessonCtrl.create)
+// router.post('/lessons/list', lessonCtrl.list)
+// router.get('/lessons/:id', lessonCtrl.get)
+// router.put('/lessons/:id', lessonCtrl.edit)
+// router.delete('/lessons/:id', lessonCtrl.del)
 
 /** Uploads */
 router.get('/file/:name', async (req, res, next) => {

@@ -1,5 +1,5 @@
 /**
- * @description Manejo de autenticacion
+ * @description Manejo de middlewares
  */
 
 'use strict'
@@ -7,11 +7,14 @@
 // Modules
 const mongoose = require('mongoose')
 
+//Models
+const User = require('../models/user')
+
 //Utils
 const _util_response = require('../utils/response.util')
 const _util_security = require('../utils/security.util')
 
-module.exports = { isAuth }
+module.exports = { isAuth, isUser }
 
 /**
  * @description Comprueba si el token es valido y no ha expirado
@@ -54,13 +57,59 @@ async function isAuth(req, res, next) {
           error: null,
         })
 
-      /**
-       * @todo
-       * Falta verificar las tarjetas del usuario
-       * Falta verificar la suscripcion del usuario
-       */
+      req.user = user
+      next()
+    }
+  } catch (error) {
+    console.log(error)
+    return res.status(403).json({
+      success: 0,
+      data: null,
+      message: await _util_response.getResponse(67, req.headers.iso),
+      error: error.toString(),
+    })
+  }
+}
 
-      user.cards = []
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @returns
+ */
+async function isUser(req, res, next) {
+  try {
+    let { userid: userId } = req.headers
+    if (!userId) next()
+    else {
+      const { getCustomer } = require('../services/stripe.srv')
+
+      let user = await User.findOne(
+        { _id: userId },
+        { _id: 1, name: 1, email: 1, stripeId: 1, active: 1 }
+      ).lean()
+
+      if (!user)
+        return res.status(403).json({
+          success: 0,
+          data: null,
+          message: _util_response.getResponse(6, req.headers.iso),
+          error: null,
+        })
+
+      // if (!user.active)
+      //   return res.status(403).json({
+      //     success: 0,
+      //     data: null,
+      //     message: _util_response.getResponse(72, req.headers.iso),
+      //     error: null,
+      //   })
+
+      let { id: customerId, cards } = await getCustomer({ userId }, false)
+
+      user.cards = cards
+      user.isNew = customerId && cards.length > 0 ? false : true
       req.user = user
       next()
     }

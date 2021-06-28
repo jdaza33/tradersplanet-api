@@ -36,8 +36,8 @@ async function create(req, res, next) {
   try {
     let data = req.body
 
-    let max = await Education.findOne({}).sort({ order: -1 }).limit(1)
-    data.order = max.order + 1
+    const max = await Education.find({}).sort({ order: -1 }).limit(1)
+    data.order = max.length == 0 ? 1 : max[0].order + 1
 
     let educationCreated = await mongoose.model('Educations').create(data)
 
@@ -78,7 +78,7 @@ async function get(req, res, next) {
 
     return res.status(200).send({
       success: 1,
-      data: { education },
+      data: { education, user: req.user },
       error: null,
       message: _util_response.getResponse(38, req.headers.iso),
     })

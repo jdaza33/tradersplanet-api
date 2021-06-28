@@ -30,6 +30,7 @@ const Payment = new Schema({
   amount: { type: Number, required: true },
   payFor: { type: PayFor, required: true },
   createdAt: { type: Number, required: true }, //Fecha en milisegundos
+  expireAt: { type: Number, required: false }, //Fecha en milisegundos // 0 no expira
   createdBy: { type: String, required: false, trim: true, ref: 'Users' },
   // reviewed: { type: Boolean, default: false, required: true },
 })

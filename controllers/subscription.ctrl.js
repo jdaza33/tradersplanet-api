@@ -16,6 +16,7 @@ const _util_response = require('../utils/response.util')
 module.exports = {
   create,
   list,
+  get
 }
 
 /**
@@ -75,6 +76,37 @@ async function list(req, res, next) {
         'Subscriptions',
         filters
       ),
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+async function get(req, res, next) {
+  try {
+    let { id } = req.params
+
+    let subscription = await Subscription.findById(id).lean()
+
+    if (!subscription)
+      return res.status(403).send({
+        success: 0,
+        data: null,
+        error: null,
+        message: _util_response.getResponse(74, req.headers.iso),
+      })
+
+    return res.status(200).send({
+      success: 1,
+      data: { subscription, user: req.user },
+      error: null,
+      message: _util_response.getResponse(75, req.headers.iso),
     })
   } catch (error) {
     next(error)

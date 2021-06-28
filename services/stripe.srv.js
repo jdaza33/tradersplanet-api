@@ -12,6 +12,46 @@ const Service = require('../models/service')
 const Subscription = require('../models/subscription')
 const User = require('../models/user')
 
+module.exports = {
+  newPayment,
+  newPaymentWithSource,
+  newPaymentCheckout,
+  getSessionId,
+  createProduct,
+  createPriceProduct,
+  listPriceProduct,
+  getCustomer,
+  createCustomer,
+  addCardToCustomer,
+  getCardsCustomer,
+  createSource,
+}
+
+function createSource({ number, exp_month, exp_year, cvc, name, customer }) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const stripe = Stripe(process.env.KEY_SECRET_STRIPE)
+
+      //Create token
+      let { id } = await stripe.tokens.create({
+        card: {
+          number,
+          exp_month,
+          exp_year,
+          cvc,
+          name,
+          // customer,
+        },
+      })
+
+      resolve(id)
+    } catch (error) {
+      console.log(error)
+      reject(error)
+    }
+  })
+}
+
 function newPayment(data) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -44,19 +84,48 @@ function newPayment(data) {
   })
 }
 
-function newPaymentWithSource(data) {
+/**
+ * @description Realiza un pago directo
+ * @param {number} amount
+ * @param {string} source
+ * @param {string} customerId
+ * @param {string} productId
+ * @returns {object}
+ */
+function newPaymentWithSource(amount, source, customerId, productId) {
   return new Promise(async (resolve, reject) => {
     try {
       const stripe = Stripe(process.env.KEY_SECRET_STRIPE)
       let charge = await stripe.charges.create({
-        amount: Math.round(data.amount * 100),
-        currency: 'usd',
-        source: data.source,
-        receipt_email: data.email,
-        description: data.description,
+        amount: Math.round(amount * 100),
+        currency: process.env.CURRENCY_DEFAULT,
+        source: source,
+        customer: customerId,
         metadata: {
-          objectType: data.type,
-          objectId: data.typeId,
+          productId,
+        },
+      })
+
+      resolve(charge)
+    } catch (error) {
+      console.log(error)
+      reject(error)
+    }
+  })
+}
+
+
+ function newPaymentSubscription(amount, source, customerId, productId) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const stripe = Stripe(process.env.KEY_SECRET_STRIPE)
+      let charge = await stripe.charges.create({
+        amount: Math.round(amount * 100),
+        currency: process.env.CURRENCY_DEFAULT,
+        source: source,
+        customer: customerId,
+        metadata: {
+          productId,
         },
       })
 
@@ -111,40 +180,43 @@ function getSessionId(sessionId) {
   })
 }
 
-function createProduct(name, id, type) {
+/**
+ * @description Crea un producto en Stripe (Curso, servicio o suscripcion)
+ * @param {string} type Tipo del modelo [subscription, service, education]
+ * @param {object} object Objeto del modelo
+ * @returns {product}
+ */
+function createProduct(type, object) {
   return new Promise(async (resolve, reject) => {
     try {
       const stripe = Stripe(process.env.KEY_SECRET_STRIPE)
 
-      let object = null
-      if (type == 'education')
-        object = await Education.findOne({ _id: id }, { _id: 1, stipeId: 1 })
-      if (type == 'service')
-        object = await Service.findOne({ _id: id }, { _id: 1, stipeId: 1 })
-      if (type == 'subscription')
-        object = await Subscription.findOne(
-          { _id: id },
-          { _id: 1, stipeId: 1, payments: 1 }
-        )
+      const { _id: objectId, stripeId, name, title } = object
 
-      if (!object) return reject(`El objeto ${type} con id: ${id} no existe`)
+      if (!objectId) return reject(`El objeto ${type} no existe`)
 
       //Buscamos el producto en stripe
-      if (object.stipeId) {
-        let { id: productId } = await stripe.products.retrieve(object.stipeId)
-        if (productId) return reject('El producto ya existe')
+      if (stripeId) {
+        let { id: productId } = await stripe.products.retrieve(stripeId)
+        if (productId) {
+          console.log('El producto ya existe')
+          return resolve()
+        }
       }
 
       //Crear producto
       let product = await stripe.products.create({
-        name,
-        metadata: { id, type },
+        name: name || title,
+        metadata: { id: objectId.toString(), type },
       })
 
+      const Model = require(`../models/${type}`)
+
       //Actualizamos
-      await mongoose
-        .model(`${type}s`)
-        .findOneAndUpdate({ _id: id }, { $set: { stipeId: product.id } })
+      await Model.findOneAndUpdate(
+        { _id: objectId },
+        { $set: { stripeId: product.id } }
+      )
 
       return resolve(product)
     } catch (error) {
@@ -154,6 +226,14 @@ function createProduct(name, id, type) {
   })
 }
 
+/**
+ * @description Crea los precios de un producto en Stripe
+ * @param {string} productId
+ * @param {string} type [subscription, education, service]
+ * @param {number} price
+ * @param {object} obj Objeto de suscripcion
+ * @returns {priceProduct}
+ */
 function createPriceProduct(productId, type, price, obj) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -189,7 +269,6 @@ function createPriceProduct(productId, type, price, obj) {
           })
         }
       }
-
       return resolve(priceProduct)
     } catch (error) {
       console.log(error)
@@ -198,16 +277,21 @@ function createPriceProduct(productId, type, price, obj) {
   })
 }
 
+/**
+ * @description Lista los precios de un producto
+ * @param {string} productId
+ * @returns {[prices]}
+ */
 function listPriceProduct(productId) {
   return new Promise(async (resolve, reject) => {
     try {
       const stripe = Stripe(process.env.KEY_SECRET_STRIPE)
 
-      let product = await stripe.prices.list({
+      let { data } = await stripe.prices.list({
         product: productId,
       })
 
-      return resolve(product)
+      return resolve(data)
     } catch (error) {
       console.log(error)
       return reject(error)
@@ -215,6 +299,11 @@ function listPriceProduct(productId) {
   })
 }
 
+/**
+ * @description Crear un cliente en Stripe, si ya este creado, lo busca y retorna el objeto customer
+ * @param {string} userId
+ * @returns {customer}
+ */
 function createCustomer(userId) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -227,20 +316,21 @@ function createCustomer(userId) {
       ).lean()
 
       //Buscamos el usuario en stripe
-      if (user.stipeId) {
-        let isCustomer = await getCustomer(user.stipeId)
+      if (user.stripeId) {
+        let isCustomer = await getCustomer({ customerId: user.stripeId })
         if (isCustomer) return resolve(isCustomer)
       }
 
       let customer = await stripe.customers.create({
         name: `${user.name} ${user.lastname}`,
-        email,
-        metadata: { id: _id },
+        email: user.email,
+        metadata: { id: userId },
       })
 
-      await mongoose
-        .model(`users`)
-        .findOneAndUpdate({ _id: userId }, { $set: { stipeId: customer.id } })
+      await User.findOneAndUpdate(
+        { _id: userId },
+        { $set: { stripeId: customer.id } }
+      )
 
       return resolve(customer)
     } catch (error) {
@@ -250,14 +340,35 @@ function createCustomer(userId) {
   })
 }
 
-function getCustomer(customerId) {
+/**
+ * @description Busca un cliente en Stripe
+ * @param {object} customerId or userId
+ * @returns {string} ID
+ */
+function getCustomer({ customerId, userId }, validate = true) {
   return new Promise(async (resolve, reject) => {
     try {
       const stripe = Stripe(process.env.KEY_SECRET_STRIPE)
 
-      let { id } = await stripe.customers.retrieve(customerId)
+      if (userId) {
+        const user = await User.findById(userId, { stripeId: 1 })
+        if (!user.stripeId && validate)
+          return reject(`El stripeId del usuario ${userId} no existe`)
 
-      return resolve(id)
+        if (!user.stripeId && !validate) return resolve({ id: null, cards: [] })
+        customerId = user.stripeId
+      }
+
+      const { id } = await stripe.customers.retrieve(customerId)
+
+      if (!id && validate)
+        return reject(`El customer con el customerId ${customerId} no existe`)
+
+      if (!id && !validate) return resolve({ id: null, cards: [] })
+
+      const cards = await getCardsCustomer(customerId)
+
+      return resolve({ id, cards })
     } catch (error) {
       console.log(error)
       return reject(error)
@@ -265,6 +376,12 @@ function getCustomer(customerId) {
   })
 }
 
+/**
+ * @description Añade una tarjeta al cliente en Stripe
+ * @param {string} customerId
+ * @param {string} source
+ * @returns {object}
+ */
 function addCardToCustomer(customerId, source) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -282,23 +399,33 @@ function addCardToCustomer(customerId, source) {
   })
 }
 
-module.exports = {
-  newPayment,
-  newPaymentWithSource,
-  newPaymentCheckout,
-  getSessionId,
-  createProduct,
-  createPriceProduct,
-  listPriceProduct,
-  getCustomer,
-  createCustomer,
-  addCardToCustomer,
+/**
+ * @description Obtiene las tarjetas de un cliente en Stripe
+ * @param {string} customerId
+ * @returns {[cards]}
+ */
+function getCardsCustomer(customerId) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const stripe = Stripe(process.env.KEY_SECRET_STRIPE)
+
+      const { data } = await stripe.customers.listSources(customerId, {
+        object: 'card',
+        limit: 10,
+      })
+
+      return resolve(data)
+    } catch (error) {
+      console.log(error)
+      return reject(error)
+    }
+  })
 }
 
 /**
  * @test
  */
-const stripe = Stripe('sk_test_4EpcKa42hLuxBfuBPox2INRx00CJeIwAqP')
+// const stripe = Stripe('sk_test_4EpcKa42hLuxBfuBPox2INRx00CJeIwAqP')
 // stripe.products
 //   .list({
 //     limit: 10,

@@ -36,7 +36,7 @@ async function create(req, res, next) {
 }
 
 /**
- *
+ * @deprecated
  * @param {*} req
  * @param {*} res
  * @param {*} next
@@ -118,7 +118,7 @@ async function getSession(req, res, next) {
  *
  * @apiParam {String="education","service", "subscription"} type Tipo del modelo que desea comprar o registrar
  * @apiParam {String} typeId ID del modelo
- * @apiParam {String} typePayment Ocurrencia del pago, solo aplica para suscripciones 
+ * @apiParam {String} typePayment Ocurrencia del pago, solo aplica para suscripciones
  * @apiParam {String} userId ID del usuario que realiza el pago
  * @apiParam {Boolean} isNew true si el usuario es nuevo y false si ya esta registrado en stripe (Para saber si esta registrado en stripe y tiene tarjetas, antes debe consultar /users/check-cards)
  * @apiParam {String} [source] En caso de que isNew sea falso, entonces se envia el source de la tarjeta
@@ -136,18 +136,31 @@ async function getSession(req, res, next) {
  *  source: 'source_123456789'
  *  saveCard: true
  * }
- * 
+ *
  *
  */
 async function payWithStripe(req, res, next) {
   try {
-    let { type, typeId, userId, isNew, source, coupon, saveCard } = req.body
-
     let pay = await newPayment(req.body)
 
     return res.status(200).send({
       success: 1,
-      // data: { pay },
+      data: { pay },
+      error: null,
+      message: _util_response.getResponse(54, req.headers.iso),
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+async function createSourceCard(req, res, next) {
+  try {
+    const { createSource } = require('../services/stripe.srv')
+
+    return res.status(200).send({
+      success: 1,
+      data: { id: await createSource(req.body) },
       error: null,
       message: _util_response.getResponse(54, req.headers.iso),
     })
@@ -162,4 +175,5 @@ module.exports = {
   createSesion,
   getSession,
   payWithStripe,
+  createSourceCard
 }

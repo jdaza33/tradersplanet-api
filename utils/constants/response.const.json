@@ -117,15 +117,6 @@
     ]
   },
   {
-    "code": 13,
-    "message": [
-      {
-        "iso": "es",
-        "text": "El email del usuario no existe."
-      }
-    ]
-  },
-  {
     "code": 14,
     "message": [
       {
@@ -644,6 +635,51 @@
       {
         "iso": "es",
         "text": "Promociones listadas con éxito"
+      }
+    ]
+  },
+  {
+    "code": 72,
+    "message": [
+      {
+        "iso": "es",
+        "text": "El usuario no está activo"
+      }
+    ]
+  },
+  {
+    "code": 73,
+    "message": [
+      {
+        "iso": "es",
+        "text": "El campo source es requerido solo si isNew es verdadero. "
+      }
+    ]
+  },
+  {
+    "code": 74,
+    "message": [
+      {
+        "iso": "es",
+        "text": "No existe el ID de Suscripcion."
+      }
+    ]
+  },
+  {
+    "code": 75,
+    "message": [
+      {
+        "iso": "es",
+        "text": "Suscripcion obtenida con éxito."
+      }
+    ]
+  },
+  {
+    "code": 76,
+    "message": [
+      {
+        "iso": "es",
+        "text": "El campo useCard es requerido solo si isNew es falso. "
       }
     ]
   }

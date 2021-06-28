@@ -2,6 +2,7 @@
  *@description Esquema de suscripciones
  */
 
+//Modules
 const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
@@ -23,6 +24,21 @@ const Subscription = new Schema({
   createdAt: { type: Number, required: true }, //Fecha en milisegundos
   createdBy: { type: String, required: false, trim: true, ref: 'Users' },
   stripeId: { type: String, trim: true },
+})
+
+Subscription.post('save', async function (doc, next) {
+  try {
+    const {
+      createProduct,
+      createPriceProduct,
+    } = require('../services/stripe.srv')
+    const { id } = await createProduct('subscription', doc)
+    await createPriceProduct(id, 'subscription', null, doc)
+    next()
+  } catch (error) {
+    console.log(error)
+    return error
+  }
 })
 
 module.exports = mongoose.model('Subscriptions', Subscription)

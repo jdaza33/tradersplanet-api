@@ -30,4 +30,19 @@ const Education = new Schema({
 
 Education.plugin(timestamp)
 
+Education.post('save', async function (doc, next) {
+  try {
+    const {
+      createProduct,
+      createPriceProduct,
+    } = require('../services/stripe.srv')
+    const { id } = await createProduct('education', doc)
+    await createPriceProduct(id, 'education', doc.price, null)
+    next()
+  } catch (error) {
+    console.log(error)
+    return error
+  }
+})
+
 module.exports = mongoose.model('Educations', Education)
