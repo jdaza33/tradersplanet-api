@@ -19,6 +19,7 @@ const _util_security = require('../utils/security.util')
 //Services
 const serviceNodemailer = require('../services/nodemailer.srv')
 const { checkPaymentsUser } = require('../services/payments.srv')
+const { getCustomer } = require('../services/stripe.srv')
 
 module.exports = {
   create,
@@ -92,6 +93,11 @@ async function get(req, res, next) {
         message: _util_response.getResponse(6, req.headers.iso),
       })
     }
+
+    let { id: customerId, cards } = await getCustomer({ userId }, false)
+
+    user.cards = cards
+    user.isNew = customerId && cards.length > 0 ? false : true
 
     const objStatusUser = await checkPaymentsUser(userId)
     user = { ...user, ...objStatusUser }
