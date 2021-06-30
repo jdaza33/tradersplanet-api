@@ -41,8 +41,10 @@ const newPayment = ({
         if (!source) return reject(_util_response.getResponse(73))
 
         customer = await createCustomer(userId)
+        console.log('customer', customer)
         let { id: cardId } = await addCardToCustomer(customer.id, source)
         source = cardId
+        console.log('cardId', cardId)
       } else {
         if (!type == 'subscription' && !useCard)
           return reject(_util_response.getResponse(76))
@@ -80,6 +82,12 @@ const newPayment = ({
           expireAt: exp,
           createdBy: userId,
         })
+
+        //Actualizamos el usuario
+        await User.updateOne(
+          { _id: userId },
+          { $set: { subscriptionId: payment.id } }
+        )
       } else {
         //Obtenemos el precio
         let { price, stripeId: productId } = await checkPriceModel(
@@ -153,7 +161,74 @@ const checkPriceModel = (type, typeId, typePayment, coupon) => {
   })
 }
 
+const checkPaymentsUser = (userId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const { getSubscription } = require('./stripe.srv')
+
+      const user = await User.findOne(
+        { _id: userId },
+        { stripeId: 1, subscriptionId: 1 }
+      ).lean()
+
+      //Buscamos los cursos
+      const paidEducations = await Payment.find(
+        { $and: [{ userId }, { 'payFor.payFor': 'education' }] },
+        { _id: 1, payFor: 1 }
+      ).lean()
+
+      const educations = await Education.find(
+        {
+          _id: paidEducations.map((p) => p.payFor.payFor),
+        },
+        { _id: 1, title: 1 }
+      ).lean()
+
+      //Buscamos su suscripcion
+
+      const {
+        id,
+        cancel_at_period_end,
+        current_period_end,
+        current_period_start,
+        created,
+        cancel_at,
+        status,
+      } = await getSubscription(user.subscriptionId)
+
+      let subscriptionStatus = {}
+      if (status == 'active') {
+        subscriptionStatus.active = true
+        subscriptionStatus.expireAt = moment().add(
+          current_period_end,
+          'millisecond'
+        )
+      } else if (status == 'canceled' || cancel_at_period_end == true) {
+        subscriptionStatus.active = false
+        subscriptionStatus.cancel = true
+        subscriptionStatus.expireAt = moment().add(
+          current_period_end,
+          'millisecond'
+        )
+        subscriptionStatus.cancelAt = moment().add(cancel_at, 'millisecond')
+      } else {
+        subscriptionStatus.active = false
+        subscriptionStatus.expireAt = moment().add(
+          current_period_end,
+          'millisecond'
+        )
+      }
+
+      return resolve({ paidCourses: educations, subscriptionStatus })
+    } catch (error) {
+      console.log(error)
+      return reject(error)
+    }
+  })
+}
+
 module.exports = {
   newPayment,
   checkPriceModel,
+  checkPaymentsUser,
 }

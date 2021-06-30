@@ -118,23 +118,23 @@ async function getSession(req, res, next) {
  *
  * @apiParam {String="education","service", "subscription"} type Tipo del modelo que desea comprar o registrar
  * @apiParam {String} typeId ID del modelo
- * @apiParam {String} typePayment Ocurrencia del pago, solo aplica para suscripciones
+ * @apiParam {String} [priceId] Ocurrencia del pago, solo aplica para suscripciones.. Se encuentra al consultar suscripciones
  * @apiParam {String} userId ID del usuario que realiza el pago
  * @apiParam {Boolean} isNew true si el usuario es nuevo y false si ya esta registrado en stripe (Para saber si esta registrado en stripe y tiene tarjetas, antes debe consultar /users/check-cards)
  * @apiParam {String} [source] En caso de que isNew sea falso, entonces se envia el source de la tarjeta
  * @apiParam {String} [coupon] Codigo de descuento, en caso de que el usuario lo tenga.
- * @apiParam {Boolean} [saveCard] Si desea guardar la tarjeta
+ * @apiParam {Boolean} [useCard] Solo se envia cuando el usuario tenga tarjetas y se quiera usar alguna de ellas. Se encuentra el objeto del usuario
  *
  * @apiParamExample {json} Request-Example:
  * {
  *  type: "education",
  *  typeId: "123456789",
- *  typePayment: "monthly"
+ *  priceId: "price_XXXXX"
  *  userId: "123456789",
  *  isNew: true,
  *  coupon: 'FREEALL2021'
  *  source: 'source_123456789'
- *  saveCard: true
+ *  useCard: 'card_XXXXX'
  * }
  *
  *

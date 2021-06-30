@@ -84,6 +84,7 @@ async function isUser(req, res, next) {
     if (!userId) next()
     else {
       const { getCustomer } = require('../services/stripe.srv')
+      const { checkPaymentsUser } = require('../services/payments.srv')
 
       let user = await User.findOne(
         { _id: userId },
@@ -110,6 +111,10 @@ async function isUser(req, res, next) {
 
       user.cards = cards
       user.isNew = customerId && cards.length > 0 ? false : true
+
+      const objStatusUser = await checkPaymentsUser(userId)
+      user = { ...user, ...objStatusUser }
+
       req.user = user
       next()
     }

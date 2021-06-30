@@ -25,7 +25,8 @@ module.exports = {
   addCardToCustomer,
   getCardsCustomer,
   createSource,
-  newPaymentSubscription
+  newPaymentSubscription,
+  getSubscription
 }
 
 function createSource({ number, exp_month, exp_year, cvc, name, customer }) {
@@ -44,6 +45,16 @@ function createSource({ number, exp_month, exp_year, cvc, name, customer }) {
           // customer,
         },
       })
+
+      // let { id } = await stripe.sources.create({
+      //   type: {
+      //     number,
+      //     exp_month,
+      //     exp_year,
+      //     cvc,
+      //     name,
+      //   },
+      // })
 
       resolve(id)
     } catch (error) {
@@ -424,10 +435,25 @@ function getCardsCustomer(customerId) {
   })
 }
 
+function getSubscription(subscriptionId) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const stripe = Stripe(process.env.KEY_SECRET_STRIPE)
+
+      const subscription = await stripe.subscriptions.retrieve(subscriptionId)
+
+      return resolve(subscription)
+    } catch (error) {
+      console.log(error)
+      return reject(error)
+    }
+  })
+}
+
 /**
  * @test
  */
-// const stripe = Stripe('sk_test_4EpcKa42hLuxBfuBPox2INRx00CJeIwAqP')
+const stripe = Stripe('sk_test_4EpcKa42hLuxBfuBPox2INRx00CJeIwAqP')
 // stripe.products
 //   .list({
 //     limit: 10,
@@ -455,3 +481,13 @@ function getCardsCustomer(customerId) {
 //   .then((res) => console.log(res))
 
 // stripe.products.retrieve('prod_FTggw5ZSDj6ElC').then((res) => console.log(res))
+
+// stripe.customers
+//   .createSource('cus_JkxgjceEM162Lb', {
+//     source: 'src_1J7RvOEMmfeVihOHn0ftZHrC',
+//   })
+//   .then((res) => console.log(res))
+
+// stripe.customers
+//   .listSources('cus_JkxgjceEM162Lb', { object: 'card' })
+//   .then((res) => console.log(res))

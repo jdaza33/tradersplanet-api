@@ -18,6 +18,7 @@ const _util_security = require('../utils/security.util')
 
 //Services
 const serviceNodemailer = require('../services/nodemailer.srv')
+const { checkPaymentsUser } = require('../services/payments.srv')
 
 module.exports = {
   create,
@@ -91,6 +92,9 @@ async function get(req, res, next) {
         message: _util_response.getResponse(6, req.headers.iso),
       })
     }
+
+    const objStatusUser = await checkPaymentsUser(userId)
+    user = { ...user, ...objStatusUser }
 
     return res.status(200).send({
       success: 1,

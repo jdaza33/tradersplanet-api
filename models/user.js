@@ -37,6 +37,7 @@ const User = new Schema({
 
   //Stripe
   stripeId: { type: String, required: false },
+  subscriptionId: { type: String, required: false },
 
   /**
    * @deprecated
