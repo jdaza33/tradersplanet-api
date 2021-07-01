@@ -120,9 +120,9 @@
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
-            "field": "typePayment",
-            "description": "<p>Ocurrencia del pago, solo aplica para suscripciones</p>"
+            "optional": true,
+            "field": "priceId",
+            "description": "<p>Ocurrencia del pago, solo aplica para suscripciones.. Se encuentra al consultar suscripciones</p>"
           },
           {
             "group": "Parameter",
@@ -156,15 +156,15 @@
             "group": "Parameter",
             "type": "Boolean",
             "optional": true,
-            "field": "saveCard",
-            "description": "<p>Si desea guardar la tarjeta</p>"
+            "field": "useCard",
+            "description": "<p>Solo se envia cuando el usuario tenga tarjetas y se quiera usar alguna de ellas. Se encuentra el objeto del usuario</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Request-Example:",
-          "content": "{\n type: \"education\",\n typeId: \"123456789\",\n typePayment: \"monthly\"\n userId: \"123456789\",\n isNew: true,\n coupon: 'FREEALL2021'\n source: 'source_123456789'\n saveCard: true\n}",
+          "content": "{\n type: \"education\",\n typeId: \"123456789\",\n priceId: \"price_XXXXX\"\n userId: \"123456789\",\n isNew: true,\n coupon: 'FREEALL2021'\n source: 'source_123456789'\n useCard: 'card_XXXXX'\n}",
           "type": "json"
         }
       ]
