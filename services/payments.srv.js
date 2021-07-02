@@ -179,44 +179,45 @@ const checkPaymentsUser = (userId) => {
 
       const educations = await Education.find(
         {
-          _id: paidEducations.map((p) => p.payFor.payFor),
+          _id: { $in: paidEducations.map((p) => p.payFor.id) },
         },
         { _id: 1, title: 1 }
       ).lean()
 
       //Buscamos su suscripcion
+      let subscriptionStatus = { active: false }
+      if (user.subscriptionId && /sub/i.test(user.subscriptionId)) {
+        const {
+          id,
+          cancel_at_period_end,
+          current_period_end,
+          current_period_start,
+          created,
+          cancel_at,
+          status,
+        } = await getSubscription(user.subscriptionId)
 
-      const {
-        id,
-        cancel_at_period_end,
-        current_period_end,
-        current_period_start,
-        created,
-        cancel_at,
-        status,
-      } = await getSubscription(user.subscriptionId)
-
-      let subscriptionStatus = {}
-      if (status == 'active') {
-        subscriptionStatus.active = true
-        subscriptionStatus.expireAt = moment().add(
-          current_period_end,
-          'millisecond'
-        )
-      } else if (status == 'canceled' || cancel_at_period_end == true) {
-        subscriptionStatus.active = false
-        subscriptionStatus.cancel = true
-        subscriptionStatus.expireAt = moment().add(
-          current_period_end,
-          'millisecond'
-        )
-        subscriptionStatus.cancelAt = moment().add(cancel_at, 'millisecond')
-      } else {
-        subscriptionStatus.active = false
-        subscriptionStatus.expireAt = moment().add(
-          current_period_end,
-          'millisecond'
-        )
+        if (status == 'active') {
+          subscriptionStatus.active = true
+          subscriptionStatus.expireAt = moment().add(
+            current_period_end,
+            'millisecond'
+          )
+        } else if (status == 'canceled' || cancel_at_period_end == true) {
+          subscriptionStatus.active = false
+          subscriptionStatus.cancel = true
+          subscriptionStatus.expireAt = moment().add(
+            current_period_end,
+            'millisecond'
+          )
+          subscriptionStatus.cancelAt = moment().add(cancel_at, 'millisecond')
+        } else {
+          subscriptionStatus.active = false
+          subscriptionStatus.expireAt = moment().add(
+            current_period_end,
+            'millisecond'
+          )
+        }
       }
 
       return resolve({ paidCourses: educations, subscriptionStatus })
