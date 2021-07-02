@@ -93,7 +93,6 @@ const newPayment = ({
         let { price, stripeId: productId } = await checkPriceModel(
           type,
           typeId,
-          typePayment,
           coupon
         )
 
@@ -123,7 +122,7 @@ const newPayment = ({
   })
 }
 
-const checkPriceModel = (type, typeId, typePayment, coupon) => {
+const checkPriceModel = (type, typeId, coupon) => {
   return new Promise(async (resolve, reject) => {
     try {
       let types = process.env.TYPES_PAYMENTS
@@ -136,17 +135,17 @@ const checkPriceModel = (type, typeId, typePayment, coupon) => {
         { _id: 1, name: 1, stripeId: 1, payments: 1, price: 1 }
       ).lean()
 
-      let price = ''
+      let price = model.price
 
       //Obtenemos el precio segun el modelo
-      if (type == 'subscription') {
-        let pay = model.payments.find((p) => p.type == typePayment)
-        if (!pay) return reject('No existe el tipo de pago de la suscripcion')
+      // if (type == 'subscription') {
+      //   let pay = model.payments.find((p) => p.type == typePayment)
+      //   if (!pay) return reject('No existe el tipo de pago de la suscripcion')
 
-        price = pay.price
-      } else {
-        price = model.price
-      }
+      //   price = pay.price
+      // } else {
+      //   price = model.price
+      // }
 
       /**
        * @todo
