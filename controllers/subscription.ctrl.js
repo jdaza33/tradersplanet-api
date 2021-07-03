@@ -16,7 +16,7 @@ const _util_response = require('../utils/response.util')
 module.exports = {
   create,
   list,
-  get
+  get,
 }
 
 /**
@@ -66,9 +66,18 @@ async function list(req, res, next) {
       .skip(req.skip)
       .limit(req.query.limit)
 
+    let __subscriptions = []
+    for (let subscription of subscriptions) {
+      let tmp = { ...subscription }
+      delete tmp.payments
+      if (subscription.payments.length > 0)
+        tmp = { ...tmp, ...subscription.payments[0] }
+      __subscriptions.push(tmp)
+    }
+
     return res.status(200).send({
       success: 1,
-      data: { subscription: subscriptions, user: req.user },
+      data: { subscription: __subscriptions, user: req.user },
       error: null,
       message: _util_response.getResponse(65, req.headers.iso),
       paginate: await _util_response.responsePaginate(
@@ -101,6 +110,9 @@ async function get(req, res, next) {
         error: null,
         message: _util_response.getResponse(74, req.headers.iso),
       })
+
+    if (subscription.payments.length > 0)
+      subscription = { ...subscription, ...subscription.payments[0] }
 
     return res.status(200).send({
       success: 1,
