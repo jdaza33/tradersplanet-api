@@ -700,5 +700,23 @@
         "text": "typePayment invalido"
       }
     ]
+  },
+  {
+    "code": 79,
+    "message": [
+      {
+        "iso": "es",
+        "text": "type o typeId invalido"
+      }
+    ]
+  },
+  {
+    "code": 80,
+    "message": [
+      {
+        "iso": "es",
+        "text": "priceId no existe para el typeId"
+      }
+    ]
   }
 ]

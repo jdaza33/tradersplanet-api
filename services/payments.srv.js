@@ -58,14 +58,20 @@ const newPayment = ({
 
       //Realizamos el pago
       if (type == 'subscription') {
-        payment = await newPaymentSubscription(customer.id, priceId)
-
         let sub = await Subscription.findOne(
           { _id: typeId },
           { payments: 1 }
         ).lean()
 
+        if (!sub) return reject(_util_response.getResponse(79))
+
         let objPayment = sub.payments.find((p) => p.priceId == priceId)
+
+        if (!objPayment) return reject(_util_response.getResponse(80))
+
+        //Realizamos el cobro
+        payment = await newPaymentSubscription(customer.id, priceId)
+
         let exp = 0
         if (objPayment) {
           if (objPayment.type == 'monthly') moment().add(1, 'month')
