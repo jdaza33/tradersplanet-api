@@ -70,8 +70,11 @@ async function list(req, res, next) {
     for (let subscription of subscriptions) {
       let tmp = { ...subscription }
       delete tmp.payments
-      if (subscription.payments.length > 0)
-        tmp = { ...tmp, ...subscription.payments[0] }
+      if (subscription.payments.length > 0) {
+        const { price, priceId, type } = subscription.payments[0]
+        tmp = { ...tmp, price, priceId, type }
+      }
+
       __subscriptions.push(tmp)
     }
 
@@ -111,8 +114,10 @@ async function get(req, res, next) {
         message: _util_response.getResponse(74, req.headers.iso),
       })
 
-    if (subscription.payments.length > 0)
-      subscription = { ...subscription, ...subscription.payments[0] }
+    if (subscription.payments.length > 0) {
+      const { price, priceId, type } = subscription.payments[0]
+      subscription = { ...subscription, price, priceId, type }
+    }
 
     return res.status(200).send({
       success: 1,
