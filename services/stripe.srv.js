@@ -26,7 +26,10 @@ module.exports = {
   getCardsCustomer,
   createSource,
   newPaymentSubscription,
-  getSubscription
+  getSubscription,
+  updateCardCustomer,
+  deleteCardCustomer,
+  deleteSubscription,
 }
 
 function createSource({ number, exp_month, exp_year, cvc, name, customer }) {
@@ -390,6 +393,58 @@ function getCustomer({ customerId, userId }, validate = true) {
 }
 
 /**
+ *
+ * GESTION DE SUSCRIPCIONES
+ *
+ */
+
+/**
+ * @description Obtener una suscripcion
+ * @param {string} subscriptionId
+ * @returns
+ */
+function getSubscription(subscriptionId) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const stripe = Stripe(process.env.KEY_SECRET_STRIPE)
+
+      const subscription = await stripe.subscriptions.retrieve(subscriptionId)
+
+      return resolve(subscription)
+    } catch (error) {
+      console.log(error)
+      return reject(error)
+    }
+  })
+}
+
+/**
+ * @description Eliminar una suscripcion
+ * @param {string} subscriptionId
+ * @returns
+ */
+function deleteSubscription(subscriptionId) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const stripe = Stripe(process.env.KEY_SECRET_STRIPE)
+
+      const subscription = await stripe.subscriptions.del(subscriptionId)
+
+      return resolve(subscription)
+    } catch (error) {
+      console.log(error)
+      return reject(error)
+    }
+  })
+}
+
+/**
+ *
+ * GESTION DE TARJETAS
+ *
+ */
+
+/**
  * @description Añade una tarjeta al cliente en Stripe
  * @param {string} customerId
  * @param {string} source
@@ -435,14 +490,46 @@ function getCardsCustomer(customerId) {
   })
 }
 
-function getSubscription(subscriptionId) {
+/**
+ * @description Actualiza la tarjeta de un cliente en Stripe
+ * @param {String} customerId
+ * @param {String} cardId
+ * @param {Object} changes
+ * @returns {Card}
+ */
+function updateCardCustomer(customerId, cardId, changes = {}) {
   return new Promise(async (resolve, reject) => {
     try {
       const stripe = Stripe(process.env.KEY_SECRET_STRIPE)
 
-      const subscription = await stripe.subscriptions.retrieve(subscriptionId)
+      const card = await stripe.customers.updateSource(
+        customerId,
+        cardId,
+        changes
+      )
 
-      return resolve(subscription)
+      return resolve(card)
+    } catch (error) {
+      console.log(error)
+      return reject(error)
+    }
+  })
+}
+
+/**
+ * @description Elimina la tarjeta de un cliente en Stripe
+ * @param {String} customerId
+ * @param {String} cardId
+ * @returns {Card}
+ */
+function deleteCardCustomer(customerId, cardId) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const stripe = Stripe(process.env.KEY_SECRET_STRIPE)
+
+      const card = await stripe.customers.deleteSource(customerId, cardId)
+
+      return resolve(card)
     } catch (error) {
       console.log(error)
       return reject(error)

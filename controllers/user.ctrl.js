@@ -19,7 +19,15 @@ const _util_security = require('../utils/security.util')
 //Services
 const serviceNodemailer = require('../services/nodemailer.srv')
 const { checkPaymentsUser } = require('../services/payments.srv')
-const { getCustomer } = require('../services/stripe.srv')
+const {
+  getCustomer,
+  addCardToCustomer,
+  getCardsCustomer,
+  updateCardCustomer,
+  deleteCardCustomer,
+  createCustomer,
+  deleteSubscription,
+} = require('../services/stripe.srv')
 
 module.exports = {
   create,
@@ -32,6 +40,11 @@ module.exports = {
   payCourse,
   resetPassword,
   inviteToSlack,
+  addCardUser,
+  listCardsUser,
+  updateCardUser,
+  deleteCardUser,
+  deleteSubscriptionUser,
 }
 
 /**
@@ -477,6 +490,252 @@ async function inviteToSlack(req, res, next) {
     }
   } catch (error) {
     console.log(error)
+    next(error)
+  }
+}
+
+/**
+ * @api {post} /users/{userId}/add/card Añadir una tarjeta al usuario
+ * @apiName addCardUser
+ * @apiGroup Users
+ * @apiDescription Servicio para añadir una tarjeta a stripe.
+ * @apiVersion 1.0.0
+ *
+ * @apiHeader {String} authorization Bearer {token}
+ * @apiHeader {String} iso Lenguaje del usuario, por defecto = "es"
+ *
+ * @apiParam {String} source Token de la tarjeta
+ *
+ */
+async function addCardUser(req, res, next) {
+  try {
+    let { id: userId } = req.params
+    let { source } = req.body
+
+    // Verificar si existe dicho id
+    let user = await User.findOne({ _id: userId }, { stripeId: 1 }).lean()
+
+    if (!user)
+      return res.status(403).send({
+        success: 0,
+        data: null,
+        error: _util_response.getResponse(6, req.headers.iso),
+      })
+
+    if (!source)
+      return res.status(403).send({
+        success: 0,
+        data: null,
+        error: _util_response.getResponse(82, req.headers.iso),
+      })
+
+    let customerId = user.stripeId
+
+    if (!customerId) {
+      const { id: cusId } = await createCustomer(userId)
+      if (cusId) customerId = cusId
+      else
+        return res.status(403).send({
+          success: 0,
+          data: null,
+          error: _util_response.getResponse(81, req.headers.iso),
+        })
+    }
+
+    const card = await addCardToCustomer(customerId, source)
+
+    return res.status(200).send({
+      success: 1,
+      data: { card },
+      error: null,
+      message: _util_response.getResponse(83, req.headers.iso),
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+/**
+ * @api {get} /users/{userId}/list/card Listar las tarjetas de un usuario
+ * @apiName listCardsUser
+ * @apiGroup Users
+ * @apiDescription Servicio para listar las tarjetas de un usuario
+ * @apiVersion 1.0.0
+ *
+ * @apiHeader {String} authorization Bearer {token}
+ * @apiHeader {String} iso Lenguaje del usuario, por defecto = "es"
+ *
+ */
+async function listCardsUser(req, res, next) {
+  try {
+    let { id: userId } = req.params
+
+    // Verificar si existe dicho id
+    let user = await User.findOne({ _id: userId }, { stripeId: 1 }).lean()
+
+    if (!user)
+      return res.status(403).send({
+        success: 0,
+        data: null,
+        error: _util_response.getResponse(6, req.headers.iso),
+      })
+
+    let customerId = user.stripeId
+
+    let cards = []
+    if (customerId) cards = await getCardsCustomer(customerId)
+
+    return res.status(200).send({
+      success: 1,
+      data: { cards },
+      error: null,
+      message: _util_response.getResponse(84, req.headers.iso),
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+/**
+ * @api {put} /users/{userId}/update/card/{cardId} Actualizar una tarjeta del usuario
+ * @apiName updateCardUser
+ * @apiGroup Users
+ * @apiDescription Servicio para actualizar una tarjeta de un usuario en stripe.
+ * @apiVersion 1.0.0
+ *
+ * @apiHeader {String} authorization Bearer {token}
+ * @apiHeader {String} iso Lenguaje del usuario, por defecto = "es"
+ *
+ * @apiParam {Object} changes Cambios a realizar
+ *
+ */
+async function updateCardUser(req, res, next) {
+  try {
+    let { id: userId, cardId } = req.params
+    let { changes } = req.body
+
+    // Verificar si existe dicho id
+    let user = await User.findOne({ _id: userId }, { stripeId: 1 }).lean()
+
+    if (!user)
+      return res.status(403).send({
+        success: 0,
+        data: null,
+        error: _util_response.getResponse(6, req.headers.iso),
+      })
+
+    let customerId = user.stripeId
+
+    if (!cardId)
+      return res.status(403).send({
+        success: 0,
+        data: null,
+        error: _util_response.getResponse(85, req.headers.iso),
+      })
+
+    const card = await updateCardCustomer(customerId, cardId, changes)
+
+    return res.status(200).send({
+      success: 1,
+      data: { card },
+      error: null,
+      message: _util_response.getResponse(86, req.headers.iso),
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+/**
+ * @api {delete} /users/{userId}/delete/card/{cardId} Eliminar una tarjeta del usuario
+ * @apiName deleteCardUser
+ * @apiGroup Users
+ * @apiDescription Servicio para eliminar una tarjeta de un usuario en stripe.
+ * @apiVersion 1.0.0
+ *
+ * @apiHeader {String} authorization Bearer {token}
+ * @apiHeader {String} iso Lenguaje del usuario, por defecto = "es"
+ *
+ */
+async function deleteCardUser(req, res, next) {
+  try {
+    let { id: userId, cardId } = req.params
+
+    // Verificar si existe dicho id
+    let user = await User.findOne({ _id: userId }, { stripeId: 1 }).lean()
+
+    if (!user)
+      return res.status(403).send({
+        success: 0,
+        data: null,
+        error: _util_response.getResponse(6, req.headers.iso),
+      })
+
+    let customerId = user.stripeId
+
+    if (!cardId)
+      return res.status(403).send({
+        success: 0,
+        data: null,
+        error: _util_response.getResponse(85, req.headers.iso),
+      })
+
+    const card = await deleteCardCustomer(customerId, cardId)
+
+    return res.status(200).send({
+      success: 1,
+      data: { card },
+      error: null,
+      message: _util_response.getResponse(83, req.headers.iso),
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+/**
+ * @api {delete} /users/{userId}/delete/subscription Cancelar la suscripcion de un usuario
+ * @apiName deleteSubscriptionUser
+ * @apiGroup Users
+ * @apiDescription Servicio para cancelar la suscripcion de un un usuario en stripe.
+ * @apiVersion 1.0.0
+ *
+ * @apiHeader {String} authorization Bearer {token}
+ * @apiHeader {String} iso Lenguaje del usuario, por defecto = "es"
+ *
+ */
+async function deleteSubscriptionUser(req, res, next) {
+  try {
+    let { id: userId } = req.params
+
+    // Verificar si existe dicho id
+    let user = await User.findOne({ _id: userId }, { subscriptionId: 1 }).lean()
+
+    if (!user)
+      return res.status(403).send({
+        success: 0,
+        data: null,
+        error: _util_response.getResponse(6, req.headers.iso),
+      })
+
+    let { subscriptionId } = user
+
+    if (!subscriptionId)
+      return res.status(403).send({
+        success: 0,
+        data: null,
+        error: _util_response.getResponse(87, req.headers.iso),
+      })
+
+    await deleteSubscription(subscriptionId)
+
+    return res.status(200).send({
+      success: 1,
+      data: null,
+      error: null,
+      message: _util_response.getResponse(88, req.headers.iso),
+    })
+  } catch (error) {
     next(error)
   }
 }

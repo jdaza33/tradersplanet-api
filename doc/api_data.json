@@ -233,5 +233,186 @@
     },
     "filename": "controllers/subscription.ctrl.js",
     "groupTitle": "Subscriptions"
+  },
+  {
+    "type": "post",
+    "url": "/users/{userId}/add/card",
+    "title": "Añadir una tarjeta al usuario",
+    "name": "addCardUser",
+    "group": "Users",
+    "description": "<p>Servicio para añadir una tarjeta a stripe.</p>",
+    "version": "1.0.0",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer {token}</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "iso",
+            "description": "<p>Lenguaje del usuario, por defecto = &quot;es&quot;</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "source",
+            "description": "<p>Token de la tarjeta</p>"
+          }
+        ]
+      }
+    },
+    "filename": "controllers/user.ctrl.js",
+    "groupTitle": "Users"
+  },
+  {
+    "type": "delete",
+    "url": "/users/{userId}/delete/card/{cardId}",
+    "title": "Eliminar una tarjeta del usuario",
+    "name": "deleteCardUser",
+    "group": "Users",
+    "description": "<p>Servicio para eliminar una tarjeta de un usuario en stripe.</p>",
+    "version": "1.0.0",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer {token}</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "iso",
+            "description": "<p>Lenguaje del usuario, por defecto = &quot;es&quot;</p>"
+          }
+        ]
+      }
+    },
+    "filename": "controllers/user.ctrl.js",
+    "groupTitle": "Users"
+  },
+  {
+    "type": "delete",
+    "url": "/users/{userId}/delete/subscription",
+    "title": "Cancelar la suscripcion de un usuario",
+    "name": "deleteSubscriptionUser",
+    "group": "Users",
+    "description": "<p>Servicio para cancelar la suscripcion de un un usuario en stripe.</p>",
+    "version": "1.0.0",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer {token}</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "iso",
+            "description": "<p>Lenguaje del usuario, por defecto = &quot;es&quot;</p>"
+          }
+        ]
+      }
+    },
+    "filename": "controllers/user.ctrl.js",
+    "groupTitle": "Users"
+  },
+  {
+    "type": "get",
+    "url": "/users/{userId}/list/card",
+    "title": "Listar las tarjetas de un usuario",
+    "name": "listCardsUser",
+    "group": "Users",
+    "description": "<p>Servicio para listar las tarjetas de un usuario</p>",
+    "version": "1.0.0",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer {token}</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "iso",
+            "description": "<p>Lenguaje del usuario, por defecto = &quot;es&quot;</p>"
+          }
+        ]
+      }
+    },
+    "filename": "controllers/user.ctrl.js",
+    "groupTitle": "Users"
+  },
+  {
+    "type": "put",
+    "url": "/users/{userId}/update/card/{cardId}",
+    "title": "Actualizar una tarjeta del usuario",
+    "name": "updateCardUser",
+    "group": "Users",
+    "description": "<p>Servicio para actualizar una tarjeta de un usuario en stripe.</p>",
+    "version": "1.0.0",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer {token}</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "iso",
+            "description": "<p>Lenguaje del usuario, por defecto = &quot;es&quot;</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": false,
+            "field": "changes",
+            "description": "<p>Cambios a realizar</p>"
+          }
+        ]
+      }
+    },
+    "filename": "controllers/user.ctrl.js",
+    "groupTitle": "Users"
   }
 ]

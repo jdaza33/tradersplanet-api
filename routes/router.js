@@ -65,6 +65,12 @@ router.post(
   _upload.single('file'),
   userCtrl.setPhoto
 )
+router.post('/users/:id/add/card', isAuth, userCtrl.addCardUser)
+router.get('/users/:id/list/card', isAuth, userCtrl.listCardsUser)
+router.put('/users/:id/update/card/:cardId', isAuth, userCtrl.updateCardUser)
+router.put('/users/:id/delete/card/:cardId', isAuth, userCtrl.deleteCardUser)
+
+router.delete('/users/:id/delete/subscription', userCtrl.deleteSubscriptionUser)
 
 /** Educations */
 router.post('/educations/create', isAuth, educationCtrl.create)

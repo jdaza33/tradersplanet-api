@@ -192,6 +192,30 @@ const checkPaymentsUser = (userId) => {
       //Buscamos su suscripcion
       let subscriptionStatus = { active: false }
       if (user.subscriptionId && /sub/i.test(user.subscriptionId)) {
+        //Buscamos el pago
+        const { payFor } = await Payment.findOne(
+          {
+            $and: [{ userId }, { 'pay.id': user.subscriptionId }],
+          },
+          { _id: 1, payFor: 1 }
+        ).lean()
+
+        if (payFor) {
+          let sub = await Subscription.findOne(
+            {
+              _id: payFor.id,
+            },
+            { name: 1, payments: 1 }
+          ).lean()
+
+          if (sub && sub.payments && sub.payments.length > 0) {
+            const { price, priceId, type } = sub.payments[0]
+            sub = { ...sub, price, priceId, type }
+            delete sub.payments
+            subscriptionStatus = { ...subscriptionStatus, ...sub }
+          }
+        }
+
         const {
           id,
           cancel_at_period_end,
@@ -208,6 +232,11 @@ const checkPaymentsUser = (userId) => {
             current_period_end,
             'millisecond'
           )
+          subscriptionStatus.startAt = moment().add(
+            current_period_start,
+            'millisecond'
+          )
+          subscriptionStatus.createdAt = moment().add(created, 'millisecond')
         } else if (status == 'canceled' || cancel_at_period_end == true) {
           subscriptionStatus.active = false
           subscriptionStatus.cancel = true
@@ -216,6 +245,11 @@ const checkPaymentsUser = (userId) => {
             'millisecond'
           )
           subscriptionStatus.cancelAt = moment().add(cancel_at, 'millisecond')
+          subscriptionStatus.startAt = moment().add(
+            current_period_start,
+            'millisecond'
+          )
+          subscriptionStatus.createdAt = moment().add(created, 'millisecond')
         } else {
           subscriptionStatus.active = false
           subscriptionStatus.expireAt = moment().add(

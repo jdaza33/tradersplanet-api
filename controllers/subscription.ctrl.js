@@ -119,6 +119,8 @@ async function get(req, res, next) {
       subscription = { ...subscription, price, priceId, type }
     }
 
+    delete subscription.payments
+
     return res.status(200).send({
       success: 1,
       data: { subscription, user: req.user },

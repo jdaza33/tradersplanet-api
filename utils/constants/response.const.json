@@ -718,5 +718,77 @@
         "text": "priceId no existe para el typeId"
       }
     ]
+  },
+  {
+    "code": 81,
+    "message": [
+      {
+        "iso": "es",
+        "text": "Hubo un error al crear el cliente en Stripe"
+      }
+    ]
+  },
+  {
+    "code": 82,
+    "message": [
+      {
+        "iso": "es",
+        "text": "El campo source es requerido"
+      }
+    ]
+  },
+  {
+    "code": 83,
+    "message": [
+      {
+        "iso": "es",
+        "text": "Tarjeta añadida con éxito"
+      }
+    ]
+  },
+  {
+    "code": 84,
+    "message": [
+      {
+        "iso": "es",
+        "text": "Tarjetas listadas con éxito"
+      }
+    ]
+  },
+  {
+    "code": 85,
+    "message": [
+      {
+        "iso": "es",
+        "text": "El campo cardId es requerido para actualizar"
+      }
+    ]
+  },
+  {
+    "code": 86,
+    "message": [
+      {
+        "iso": "es",
+        "text": "Tarjeta actualizada con éxito"
+      }
+    ]
+  },
+  {
+    "code": 87,
+    "message": [
+      {
+        "iso": "es",
+        "text": "El usuario no posee una suscripcion"
+      }
+    ]
+  },
+  {
+    "code": 88,
+    "message": [
+      {
+        "iso": "es",
+        "text": "Suscripcion eliminada con éxito"
+      }
+    ]
   }
 ]
