@@ -2,15 +2,25 @@ const Discord = require('discord.js')
 
 const client = new Discord.Client()
 
-const guildTplanet = new Discord.Guild(client)
-  .addMember('831773022800576533', {
-    accessToken: '',
-  })
-  .then((res) => console.log(res))
-  .catch((err) => console.log(err))
+// const guildTplanet = new Discord.Guild(client)
+//   .addMember('831773022800576533', {
+//     accessToken: '',
+//   })
+//   .then((res) => console.log(res))
+//   .catch((err) => console.log(err))
 
 // const users = new Discord.Guild(client)
 
 // console.log(users.id)
 
-client.login('')
+client.on('ready', () => {
+  console.log(`Logged in as ${client.user.tag}!`)
+})
+
+client.on('message', (msg) => {
+  if (msg.content === 'ping') {
+    msg.reply('pong')
+  }
+})
+
+client.login('ODMxNzQyNjYxMDQ3MDkxMjIw.YHZqtw.Rsvml-LuJm92whAGiugmoC7ari4')

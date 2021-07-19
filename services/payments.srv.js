@@ -24,6 +24,7 @@ const newPayment = ({
   coupon,
   useCard,
   priceId,
+  saveCard,
 }) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -33,7 +34,10 @@ const newPayment = ({
         addCardToCustomer,
         newPaymentWithSource,
         newPaymentSubscription,
+        deleteCardCustomer,
       } = require('../services/stripe.srv')
+
+      const { addToChannel } = require('../services/discord.srv')
 
       //Creamos el usuario si aplica
       let customer = null
@@ -41,10 +45,8 @@ const newPayment = ({
         if (!source) return reject(_util_response.getResponse(73))
 
         customer = await createCustomer(userId)
-        console.log('customer', customer)
         let { id: cardId } = await addCardToCustomer(customer.id, source)
         source = cardId
-        console.log('cardId', cardId)
       } else {
         if (!type == 'subscription' && !useCard)
           return reject(_util_response.getResponse(76))
@@ -94,6 +96,11 @@ const newPayment = ({
           { _id: userId },
           { $set: { subscriptionId: payment.id } }
         )
+
+        //Si esta enlazado con discord, lo añadimos al servidor
+        const linkedDiscordSuccess = await addToChannel(userId)
+        pay.discordLinked = linkedDiscordSuccess && true
+        pay.accessToDiscord = linkedDiscordSuccess && true
       } else {
         //Obtenemos el precio
         let { price, stripeId: productId } = await checkPriceModel(
@@ -118,6 +125,9 @@ const newPayment = ({
           expireAt: 0,
           createdBy: userId,
         })
+
+        //Eliminamos la tarjeta si no desea guardarla
+        if (!saveCard) await deleteCardCustomer(customer.id, source)
       }
 
       return resolve(pay)

@@ -68,9 +68,9 @@ router.post(
 router.post('/users/:id/add/card', isAuth, userCtrl.addCardUser)
 router.get('/users/:id/list/card', isAuth, userCtrl.listCardsUser)
 router.put('/users/:id/update/card/:cardId', isAuth, userCtrl.updateCardUser)
-router.put('/users/:id/delete/card/:cardId', isAuth, userCtrl.deleteCardUser)
+router.delete('/users/:id/delete/card/:cardId', isAuth, userCtrl.deleteCardUser)
 
-router.delete('/users/:id/delete/subscription', userCtrl.deleteSubscriptionUser)
+router.delete('/users/:id/delete/subscription', isAuth, userCtrl.deleteSubscriptionUser)
 
 /** Educations */
 router.post('/educations/create', isAuth, educationCtrl.create)
@@ -161,23 +161,6 @@ router.post('/subscriptions/:id', isUser, subscriptionCtrl.get)
 router.post('/promotions/create', isAuth, promotionCtrl.create)
 router.post('/promotions/list', promotionCtrl.list)
 
-/**
- * @deprecated
- */
-/** Payments */
-// router.post('/payments/stripe/create-source', paymentCtrl.createWithSource)
-// router.post('/payments/stripe/create/sesion', paymentCtrl.createSesion)
-// router.get('/payments/stripe/sesion/:sessionId', paymentCtrl.getSession)
-/** Users */
-// router.put('/users/pay/course/:id/:courseId', userCtrl.payCourse)
-// router.get('/users/invite/slack/:id', userCtrl.inviteToSlack)
-/** Lessons */
-// router.post('/lessons/create', lessonCtrl.create)
-// router.post('/lessons/list', lessonCtrl.list)
-// router.get('/lessons/:id', lessonCtrl.get)
-// router.put('/lessons/:id', lessonCtrl.edit)
-// router.delete('/lessons/:id', lessonCtrl.del)
-
 /** Uploads */
 router.get('/file/:name', async (req, res, next) => {
   try {
@@ -194,20 +177,7 @@ router.get('/file/:name', async (req, res, next) => {
   }
 })
 
-/** Redirect */
-router.get('/redirect/slack', async (req, res, next) => {
-  try {
-    console.log(req.query)
-    console.log(req.body)
-    res.status(200)
-  } catch (error) {
-    console.log('Error al redireccionar')
-    next(error)
-  }
-})
-
 /** Discord */
-
 router.get('/discord/auth', discordCtrl.auth)
 router.get('/discord/get-auth', discordCtrl.getUrlAuth)
 
@@ -230,3 +200,30 @@ router.use('*', (req, res) => {
 })
 
 module.exports = router
+
+/**
+ * @deprecated
+ */
+/** Payments */
+// router.post('/payments/stripe/create-source', paymentCtrl.createWithSource)
+// router.post('/payments/stripe/create/sesion', paymentCtrl.createSesion)
+// router.get('/payments/stripe/sesion/:sessionId', paymentCtrl.getSession)
+/** Users */
+// router.put('/users/pay/course/:id/:courseId', userCtrl.payCourse)
+// router.get('/users/invite/slack/:id', userCtrl.inviteToSlack)
+/** Lessons */
+// router.post('/lessons/create', lessonCtrl.create)
+// router.post('/lessons/list', lessonCtrl.list)
+// router.get('/lessons/:id', lessonCtrl.get)
+// router.put('/lessons/:id', lessonCtrl.edit)
+// router.delete('/lessons/:id', lessonCtrl.del)
+// router.get('/redirect/slack', async (req, res, next) => {
+//   try {
+//     console.log(req.query)
+//     console.log(req.body)
+//     res.status(200)
+//   } catch (error) {
+//     console.log('Error al redireccionar')
+//     next(error)
+//   }
+// })

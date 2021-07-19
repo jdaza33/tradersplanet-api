@@ -16,7 +16,10 @@ const {
   getToken,
   getUser,
   saveUserDiscord,
+  addToChannel,
 } = require('../services/discord.srv')
+
+const { checkPaymentsUser } = require('../services/payments.srv')
 
 /**
  *
@@ -41,15 +44,16 @@ async function test(req, res, next) {
 }
 
 /**
- * @api {post} /discord/get-url/ Obtener el enlace de autorizacion a discord y redirigir
+ * @api {get} /discord/get-auth/ Obtener el enlace de autorizacion a discord y redirigir
  * @apiName GetUrlAuth
  * @apiGroup Discord
  * @apiDescription Servicio para redirigir al usuario a la plataforma de discord para que apruebe la autorizacion de Tplanet
  * @apiVersion 1.0.0
  *
  * @apiHeader {String} authorization Bearer {token}
+ * @apiHeader {String} iso Lenguaje del usuario, por defecto = "es"
  *
- * @apiParam {Number} id User's unique ID.
+ * @apiParam {Number} userId El id del usuario (query params)
  *
  */
 async function getUrlAuth(req, res, next) {
@@ -57,7 +61,7 @@ async function getUrlAuth(req, res, next) {
     let { userId } = req.query
     console.log(req.query)
 
-    if (!userId || userId == '') next('El campo userId es requerido')
+    if (!userId || userId == '') return next('El campo userId es requerido')
 
     let url = `${process.env.URL_ACCESS_DISCORD}&state=${userId}`
     // url = url.replace('burib', redirect_url)
@@ -82,6 +86,11 @@ async function auth(req, res, next) {
 
     //Almacenamos la informacion
     await saveUserDiscord(userId, discordId, access_token, refresh_token, exp)
+
+    //Verificamos si tiene una suscripcion
+    const { active: subUserActive } = await checkPaymentsUser(userId)
+
+    if (subUserActive) await addToChannel()
 
     path.join(path.resolve(__dirname, '../'), 'views/success-auth.html')
     res.sendFile(

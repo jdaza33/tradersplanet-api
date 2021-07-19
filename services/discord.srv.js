@@ -86,8 +86,41 @@ const saveUserDiscord = (
   })
 }
 
+const addToChannel = (userId, isValidate = false) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const { discordId, discordTokens } = await User.findOne(
+        { _id: userId },
+        { discordId: 1, discordTokens: 1 }
+      ).lean()
+
+      if (!discordId) {
+        if (isValidate)
+          return reject('El usuario aun no esta enlazado con Discord')
+        else return resolve(false)
+      }
+
+      let { data } = await axios({
+        method: 'put',
+        url: `${process.env.URL_API_DISCORD}/v8/guilds/${process.env.DISCORD_GUILD}/members/${discordId}`,
+        headers: {
+          authorization: `Bot ${process.env.BOT_DISCORD}`,
+        },
+        data: qs.stringify({
+          access_token: discordTokens.access,
+        }),
+      })
+
+      return resolve(data)
+    } catch (error) {
+      return reject(error)
+    }
+  })
+}
+
 module.exports = {
   getToken,
   getUser,
   saveUserDiscord,
+  addToChannel
 }
