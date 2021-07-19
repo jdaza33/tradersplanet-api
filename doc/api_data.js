@@ -1,7 +1,7 @@
 define({ "api": [
   {
-    "type": "post",
-    "url": "/discord/get-url/",
+    "type": "get",
+    "url": "/discord/get-auth/",
     "title": "Obtener el enlace de autorizacion a discord y redirigir",
     "name": "GetUrlAuth",
     "group": "Discord",
@@ -16,6 +16,13 @@ define({ "api": [
             "optional": false,
             "field": "authorization",
             "description": "<p>Bearer {token}</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "iso",
+            "description": "<p>Lenguaje del usuario, por defecto = &quot;es&quot;</p>"
           }
         ]
       }
@@ -27,8 +34,8 @@ define({ "api": [
             "group": "Parameter",
             "type": "Number",
             "optional": false,
-            "field": "id",
-            "description": "<p>User's unique ID.</p>"
+            "field": "userId",
+            "description": "<p>El id del usuario (query params)</p>"
           }
         ]
       }
