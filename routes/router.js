@@ -70,7 +70,11 @@ router.get('/users/:id/list/card', isAuth, userCtrl.listCardsUser)
 router.put('/users/:id/update/card/:cardId', isAuth, userCtrl.updateCardUser)
 router.delete('/users/:id/delete/card/:cardId', isAuth, userCtrl.deleteCardUser)
 
-router.delete('/users/:id/delete/subscription', isAuth, userCtrl.deleteSubscriptionUser)
+router.delete(
+  '/users/:id/delete/subscription',
+  isAuth,
+  userCtrl.deleteSubscriptionUser
+)
 
 /** Educations */
 router.post('/educations/create', isAuth, educationCtrl.create)
@@ -180,6 +184,9 @@ router.get('/file/:name', async (req, res, next) => {
 /** Discord */
 router.get('/discord/auth', discordCtrl.auth)
 router.get('/discord/get-auth', discordCtrl.getUrlAuth)
+router.get('/discord/channel', (req, res, next) => {
+  res.redirect(process.env.URL_CHANNEL_DISCORD)
+})
 
 /** CRON */
 cron.schedule('* * * * *', () => {

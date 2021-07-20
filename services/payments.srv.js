@@ -100,9 +100,10 @@ const newPayment = ({
         pay = JSON.parse(JSON.stringify(pay))
 
         //Si esta enlazado con discord, lo añadimos al servidor
-        const linkedDiscordSuccess = await addToChannel(userId)
-        pay.discordLinked = linkedDiscordSuccess && true
-        pay.accessToDiscord = linkedDiscordSuccess && true
+        addToChannel(userId)
+        // const linkedDiscordSuccess = addToChannel(userId)
+        // pay.discordLinked = linkedDiscordSuccess && true
+        // pay.accessToDiscord = linkedDiscordSuccess && true
       } else {
         //Obtenemos el precio
         let { price, stripeId: productId } = await checkPriceModel(

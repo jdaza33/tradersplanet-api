@@ -106,9 +106,9 @@ const addToChannel = (userId, isValidate = false) => {
         headers: {
           authorization: `Bot ${process.env.BOT_DISCORD}`,
         },
-        data: qs.stringify({
+        data: {
           access_token: discordTokens.access,
-        }),
+        },
       })
 
       return resolve(data)
@@ -122,5 +122,5 @@ module.exports = {
   getToken,
   getUser,
   saveUserDiscord,
-  addToChannel
+  addToChannel,
 }
