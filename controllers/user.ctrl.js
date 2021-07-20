@@ -93,7 +93,7 @@ async function get(req, res, next) {
   try {
     let userId = req.params.id
 
-    let user = await mongoose.model('Users').findById(userId, { password: 0 })
+    let user = await User.findById(userId, { password: 0 }).lean()
 
     if (!user) {
       return res.status(403).send({
