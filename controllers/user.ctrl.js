@@ -112,7 +112,7 @@ async function get(req, res, next) {
     const objStatusUser = await checkPaymentsUser(userId)
     user = { ...user, ...objStatusUser }
 
-    user.discordLinked = user.discordId && true
+    user.discordLinked = user.discordId ? true : false
 
     return res.status(200).send({
       success: 1,
