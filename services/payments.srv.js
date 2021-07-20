@@ -97,6 +97,8 @@ const newPayment = ({
           { $set: { subscriptionId: payment.id } }
         )
 
+        pay = JSON.parse(JSON.stringify(pay))
+
         //Si esta enlazado con discord, lo añadimos al servidor
         const linkedDiscordSuccess = await addToChannel(userId)
         pay.discordLinked = linkedDiscordSuccess && true

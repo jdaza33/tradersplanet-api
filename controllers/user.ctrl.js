@@ -93,10 +93,7 @@ async function get(req, res, next) {
   try {
     let userId = req.params.id
 
-    let user = await mongoose
-      .model('Users')
-      .findById(userId)
-      .populate({ path: 'paidcourses' })
+    let user = await mongoose.model('Users').findById(userId, { password: 0 })
 
     if (!user) {
       return res.status(403).send({
@@ -114,6 +111,8 @@ async function get(req, res, next) {
 
     const objStatusUser = await checkPaymentsUser(userId)
     user = { ...user, ...objStatusUser }
+
+    user.discordLinked = user.discordId && true
 
     return res.status(200).send({
       success: 1,
