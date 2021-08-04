@@ -37,6 +37,8 @@ const newPayment = ({
         deleteCardCustomer,
       } = require('../services/stripe.srv')
 
+      const { sendMailNewSubscription } = require('../services/nodemailer.srv')
+
       const { addToChannel } = require('../services/discord.srv')
 
       //Creamos el usuario si aplica
@@ -104,6 +106,8 @@ const newPayment = ({
         // const linkedDiscordSuccess = addToChannel(userId)
         // pay.discordLinked = linkedDiscordSuccess && true
         // pay.accessToDiscord = linkedDiscordSuccess && true
+
+        sendMailNewSubscription(userId)
       } else {
         //Obtenemos el precio
         let { price, stripeId: productId } = await checkPriceModel(
