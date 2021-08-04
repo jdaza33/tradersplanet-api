@@ -88,9 +88,10 @@ async function auth(req, res, next) {
     await saveUserDiscord(userId, discordId, access_token, refresh_token, exp)
 
     //Verificamos si tiene una suscripcion
-    const { active: subUserActive } = await checkPaymentsUser(userId)
+    const { subscriptionStatus } = await checkPaymentsUser(userId)
+    const { active: subUserActive } = subscriptionStatus
 
-    if (subUserActive) await addToChannel()
+    if (subUserActive) addToChannel(userId)
 
     path.join(path.resolve(__dirname, '../'), 'views/success-auth.html')
     res.sendFile(
