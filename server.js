@@ -35,7 +35,6 @@ app.use(express.json())
 app.use(paginate.middleware(10, 50))
 app.use(helmet())
 
-
 //Database
 require('./config/db')
 
@@ -50,6 +49,9 @@ app.use('/doc', function (req, res) {
 
 /* MANEJO DE ERRORES DE EXPRESS */
 app.use(_util_error.errorHandler)
+
+//Discord
+require('./discord')
 
 //Sockets
 // require('./io/chat.io')

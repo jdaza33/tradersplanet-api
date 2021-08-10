@@ -10,6 +10,7 @@ const path = require('path')
 
 //Utils
 const _util_response = require('../utils/response.util')
+const { decodeToken } = require('../utils/security.util')
 
 //Services
 const {
@@ -58,8 +59,13 @@ async function test(req, res, next) {
  */
 async function getUrlAuth(req, res, next) {
   try {
-    let { userId } = req.query
+    const { userId, token } = req.query
     console.log(req.query)
+
+    if (token) {
+      const { exp, id } = decodeToken(token)
+      if (userId != id || exp < Date.now()) next('Token invalido')
+    } else return next('El campo token es requerido')
 
     if (!userId || userId == '') return next('El campo userId es requerido')
 
@@ -93,16 +99,18 @@ async function auth(req, res, next) {
 
     if (subUserActive) addToChannel(userId)
 
-    path.join(path.resolve(__dirname, '../'), 'views/success-auth.html')
-    res.sendFile(
-      path.join(path.resolve(__dirname, '../'), 'views/success-auth.html')
-    )
+    // path.join(path.resolve(__dirname, '../'), 'views/success-auth.html')
+    res.redirect(process.env.URL_CHANNEL_DISCORD)
+    // res.sendFile(
+    //   path.join(path.resolve(__dirname, '../'), 'views/success-auth.html')
+    // )
 
     // return res.status(200).send({
     //   success: 1,
     //   error: null,
     // })
   } catch (error) {
+    console.log(error)
     res.sendFile(
       path.join(path.resolve(__dirname, '../'), 'views/error-auth.html')
     )

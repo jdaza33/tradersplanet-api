@@ -13,6 +13,9 @@ const path = require('path')
 //Models
 const User = require('../models/user')
 
+//Utils
+const { encodeUser } = require('../utils/security.util')
+
 module.exports = {
   sendMail,
   sendMailResetPassword,
@@ -174,7 +177,6 @@ function sendMailSlack(email, name, nro) {
 function sendMailNewSubscription(userId) {
   return new Promise(async (resolve, reject) => {
     try {
-
       console.log('userId', userId)
 
       const user = await User.findOne(
@@ -186,18 +188,21 @@ function sendMailNewSubscription(userId) {
 
       const { name, email } = user
 
+      const token = await encodeUser(userId, null)
+
       const transport = nodemailer.createTransport(
         nodemailerSendgrid({
           apiKey: process.env.KEY_SENDGRID,
         })
       )
 
+      const urlDiscord = `${process.env.URI_DISCORD_GET_AUTH}?userId=${userId}&token=${token}`
+
       let template = await ejs.renderFile(
         path.join(__dirname, '../views/' + 'new-subscription.ejs'),
         {
           name,
-          id: userId,
-          urlDiscord: '',
+          urlDiscord,
         }
       )
 

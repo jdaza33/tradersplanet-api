@@ -160,6 +160,7 @@ router.post('/payments/source/create', isAuth, paymentCtrl.createSourceCard)
 router.post('/subscriptions/create', isAuth, subscriptionCtrl.create)
 router.post('/subscriptions/list', isUser, subscriptionCtrl.list)
 router.post('/subscriptions/:id', isUser, subscriptionCtrl.get)
+router.get('/subscriptions/forward-email/:id', subscriptionCtrl.ForwardEmail)
 
 /** Subscriptions */
 router.post('/promotions/create', isAuth, promotionCtrl.create)

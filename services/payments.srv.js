@@ -76,12 +76,14 @@ const newPayment = ({
         //Realizamos el cobro
         payment = await newPaymentSubscription(customer.id, priceId)
 
-        let exp = 0
-        if (objPayment) {
-          if (objPayment.type == 'monthly') moment().add(1, 'month')
-          if (objPayment.type == 'quarterly') moment().add(3, 'month')
-          if (objPayment.type == 'yearly') moment().add(1, 'year')
-        }
+        const { current_period_end } = payment
+
+        let exp = moment.unix(current_period_end).valueOf()
+        // if (objPayment) {
+        //   if (objPayment.type == 'monthly') exp = moment().add(1, 'month')
+        //   if (objPayment.type == 'quarterly') exp = moment().add(3, 'month')
+        //   if (objPayment.type == 'yearly') exp = moment().add(1, 'year')
+        // }
 
         pay = await Payment.create({
           pay: { id: payment.id, type: 'stripe' },
@@ -96,7 +98,7 @@ const newPayment = ({
         //Actualizamos el usuario
         await User.updateOne(
           { _id: userId },
-          { $set: { subscriptionId: payment.id } }
+          { $set: { subscriptionId: payment.id, expSub: exp } }
         )
 
         pay = JSON.parse(JSON.stringify(pay))
@@ -245,34 +247,22 @@ const checkPaymentsUser = (userId) => {
 
         if (status == 'active') {
           subscriptionStatus.active = true
-          subscriptionStatus.expireAt = moment().add(
-            current_period_end,
-            'millisecond'
-          )
-          subscriptionStatus.startAt = moment().add(
-            current_period_start,
-            'millisecond'
-          )
-          subscriptionStatus.createdAt = moment().add(created, 'millisecond')
+          subscriptionStatus.expireAt = moment.unix(current_period_end)
+          subscriptionStatus.startAt = moment.unix(current_period_start)
+          subscriptionStatus.createdAt = moment.unix(created)
         } else if (status == 'canceled' || cancel_at_period_end == true) {
-          subscriptionStatus.active = false
+          subscriptionStatus.active =
+            moment.unix(current_period_end).valueOf() < Date.now()
+              ? false
+              : true
           subscriptionStatus.cancel = true
-          subscriptionStatus.expireAt = moment().add(
-            current_period_end,
-            'millisecond'
-          )
-          subscriptionStatus.cancelAt = moment().add(cancel_at, 'millisecond')
-          subscriptionStatus.startAt = moment().add(
-            current_period_start,
-            'millisecond'
-          )
-          subscriptionStatus.createdAt = moment().add(created, 'millisecond')
+          subscriptionStatus.cancelAt = moment.unix(cancel_at)
+          subscriptionStatus.expireAt = moment.unix(current_period_end)
+          subscriptionStatus.startAt = moment.unix(current_period_start)
+          subscriptionStatus.createdAt = moment.unix(created)
         } else {
           subscriptionStatus.active = false
-          subscriptionStatus.expireAt = moment().add(
-            current_period_end,
-            'millisecond'
-          )
+          subscriptionStatus.expireAt = moment.unix(current_period_end)
         }
       }
 

@@ -18,9 +18,7 @@ client.on('ready', () => {
 })
 
 client.on('message', (msg) => {
-  if (msg.content === 'ping') {
-    msg.reply('pong')
-  }
+  if (msg.content === 'ping') msg.reply('pong')
 })
 
-client.login('ODMxNzQyNjYxMDQ3MDkxMjIw.YHZqtw.Rsvml-LuJm92whAGiugmoC7ari4')
+client.login(process.env.BOT_DISCORD)

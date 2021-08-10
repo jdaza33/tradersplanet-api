@@ -108,6 +108,7 @@ const addToChannel = (userId, isValidate = false) => {
         },
         data: {
           access_token: discordTokens.access,
+          roles: [process.env.ID_ROLE_MEMBER],
         },
       })
 

@@ -790,5 +790,23 @@
         "text": "Suscripcion eliminada con éxito"
       }
     ]
+  },
+  {
+    "code": 89,
+    "message": [
+      {
+        "iso": "es",
+        "text": "Correo enviado con éxito"
+      }
+    ]
+  },
+  {
+    "code": 90,
+    "message": [
+      {
+        "iso": "es",
+        "text": "Suscripcion actualizada con éxito"
+      }
+    ]
   }
 ]
