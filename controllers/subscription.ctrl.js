@@ -65,7 +65,7 @@ async function create(req, res, next) {
 async function list(req, res, next) {
   try {
     let filters = req.body
-    delete filters.active
+    if (filters.active == 'all') delete filters.active
     if (filters.active != 'all') filters = { ...filters, ...{ active: true } }
 
     let subscriptions = await Subscription.find(filters)
