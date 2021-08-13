@@ -66,7 +66,10 @@ async function list(req, res, next) {
   try {
     let filters = req.body
     if (filters.active == 'all') delete filters.active
-    if (filters.active != 'all') filters = { ...filters, ...{ active: true } }
+    else if (filters.active != 'all')
+      filters = { ...filters, ...{ active: true } }
+
+    console.log(filters)
 
     let subscriptions = await Subscription.find(filters)
       .sort({ createdAt: -1 })
