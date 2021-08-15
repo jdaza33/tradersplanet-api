@@ -25,6 +25,7 @@ const Subscription = new Schema({
   createdAt: { type: Number, required: true }, //Fecha en milisegundos
   createdBy: { type: String, required: false, trim: true, ref: 'Users' },
   stripeId: { type: String, trim: true },
+  readyForSell: { type: Boolean, default: true, required: false },
 })
 
 Subscription.post('save', async function (doc, next) {

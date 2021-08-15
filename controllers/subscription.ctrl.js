@@ -69,8 +69,6 @@ async function list(req, res, next) {
     else if (filters.active != 'all')
       filters = { ...filters, ...{ active: true } }
 
-    console.log(filters)
-
     let subscriptions = await Subscription.find(filters)
       .sort({ createdAt: -1 })
       .lean()
@@ -214,22 +212,17 @@ async function edit(req, res, next) {
         message: _util_response.getResponse(74, req.headers.iso),
       })
 
-    // let postUpdated = await mongoose
-    //   .model('Posts')
-    //   .findByIdAndUpdate(postId, { $set: changes }, { new: true })
-
-    // if (subscription.payments.length > 0) {
-    //   const { price, priceId, type } = subscription.payments[0]
-    //   subscription = { ...subscription, price, priceId, type }
-    // }
-
-    // delete subscription.payments
+    let subscriptionUpdated = await Subscription.findByIdAndUpdate(
+      id,
+      { $set: changes },
+      { new: true }
+    )
 
     return res.status(200).send({
       success: 1,
-      data: { subscription },
+      data: { subscription: subscriptionUpdated },
       error: null,
-      message: _util_response.getResponse(75, req.headers.iso),
+      message: _util_response.getResponse(90, req.headers.iso),
     })
   } catch (error) {
     next(error)
