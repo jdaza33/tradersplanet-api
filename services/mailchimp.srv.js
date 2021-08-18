@@ -40,7 +40,7 @@ function addMemberToAudience(name, email, audienceId) {
           },
         },
         (err, result) => {
-          if (err) reject(err)
+          if (err) resolve(err)
           resolve(result)
         }
       )
