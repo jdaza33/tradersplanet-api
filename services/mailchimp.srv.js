@@ -46,7 +46,7 @@ function addMemberToAudience(name, email, audienceId) {
       )
     } catch (error) {
       console.log(error)
-      reject(error)
+      resolve(error)
     }
   })
 }
