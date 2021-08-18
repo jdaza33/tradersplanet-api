@@ -149,7 +149,7 @@ router.post('/webhook', webhookCtrl.main)
 router.post('/webhook/stripe', webhookCtrl.stripe)
 
 /** Subscribers */
-router.post('/subscribers/create', isAuth, subscriberCtrl.create)
+router.post('/subscribers/create', subscriberCtrl.create)
 router.post('/subscribers/list', subscriberCtrl.list)
 
 /** Payments */
