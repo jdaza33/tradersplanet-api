@@ -21,6 +21,9 @@ const PORT = process.env.PORT || 3001
 //Instancias
 const app = express()
 
+//Users
+global.users = {}
+
 //Utils
 const _util_error = require('./utils/error.util')
 

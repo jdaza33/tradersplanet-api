@@ -41,6 +41,17 @@ const newPayment = ({
 
       const { addToChannel } = require('../services/discord.srv')
 
+      //Validamos que el usuario ya este pagando
+      if (global.users) {
+        for (let i in global.users) {
+          if (i == userId && global.users[i])
+            return reject('Usuario en proceso de pago')
+        }
+      }
+
+      global.users[userId] = true
+      console.log(global.users)
+
       //Creamos el usuario si aplica
       let customer = null
       if (isNew) {
@@ -138,6 +149,8 @@ const newPayment = ({
         //Eliminamos la tarjeta si no desea guardarla
         if (!saveCard) await deleteCardCustomer(customer.id, source)
       }
+
+      global.users[userId] = false
 
       return resolve(pay)
     } catch (error) {

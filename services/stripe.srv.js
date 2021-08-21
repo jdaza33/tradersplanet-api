@@ -260,7 +260,12 @@ function createPriceProduct(productId, type, price, obj) {
       if (type == 'subscription') {
         for (let payment of obj.payments) {
           priceProduct = await stripe.prices.create({
-            unit_amount: payment.price * 100,
+            unit_amount:
+              payment.type == 'quarterly'
+                ? payment.price * 100 * 3
+                : payment.type == 'yearly'
+                ? payment.price * 100 * 12
+                : payment.price * 100,
             currency: process.env.CURRENCY_DEFAULT,
             product: productId,
             metadata: { paymentId: payment._id.toString() },

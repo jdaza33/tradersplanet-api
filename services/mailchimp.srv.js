@@ -40,13 +40,13 @@ function addMemberToAudience(name, email, audienceId) {
           },
         },
         (err, result) => {
-          if (err) resolve(err)
+          if (err) resolve(err) //TODO
           resolve(result)
         }
       )
     } catch (error) {
       console.log(error)
-      resolve(error)
+      resolve(error) //TODO
     }
   })
 }
