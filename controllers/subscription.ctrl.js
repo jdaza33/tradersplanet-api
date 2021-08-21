@@ -70,7 +70,7 @@ async function list(req, res, next) {
       filters = { ...filters, ...{ active: true } }
 
     let subscriptions = await Subscription.find(filters)
-      .sort({ createdAt: -1 })
+      // .sort({ createdAt: -1 })
       .lean()
       .skip(req.skip)
       .limit(req.query.limit)
@@ -86,6 +86,10 @@ async function list(req, res, next) {
 
       __subscriptions.push(tmp)
     }
+
+    __subscriptions = __subscriptions.sort((a, b) => {
+      return a.type > b.type ? 1 : b.type > a.type ? -1 : 0
+    })
 
     return res.status(200).send({
       success: 1,
