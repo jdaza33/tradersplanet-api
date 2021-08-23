@@ -87,7 +87,7 @@ const newPayment = ({
         //Realizamos el cobro
         payment = await newPaymentSubscription(customer.id, priceId)
 
-        const { current_period_end } = payment
+        const { current_period_end, status } = payment
 
         let exp = moment.unix(current_period_end).valueOf()
         // if (objPayment) {
@@ -115,12 +115,12 @@ const newPayment = ({
         pay = JSON.parse(JSON.stringify(pay))
 
         //Si esta enlazado con discord, lo añadimos al servidor
-        addToChannel(userId)
+        if (status == 'active') addToChannel(userId)
         // const linkedDiscordSuccess = addToChannel(userId)
         // pay.discordLinked = linkedDiscordSuccess && true
         // pay.accessToDiscord = linkedDiscordSuccess && true
 
-        sendMailNewSubscription(userId)
+        if (status == 'active') sendMailNewSubscription(userId)
       } else {
         //Obtenemos el precio
         let { price, stripeId: productId } = await checkPriceModel(
@@ -154,6 +154,7 @@ const newPayment = ({
 
       return resolve(pay)
     } catch (error) {
+      global.users[userId] = false
       console.log(error)
       return reject(error)
     }

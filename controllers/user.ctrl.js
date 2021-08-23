@@ -45,6 +45,7 @@ module.exports = {
   updateCardUser,
   deleteCardUser,
   deleteSubscriptionUser,
+  listSubcriptions,
 }
 
 /**
@@ -135,9 +136,7 @@ async function list(req, res, next) {
   try {
     let filters = req.body
 
-    let users = await mongoose
-      .model('Users')
-      .find(filters)
+    let users = await User.find(filters)
       .populate({ path: 'paidcourses' })
       .lean()
       .skip(req.skip)
@@ -733,6 +732,35 @@ async function deleteSubscriptionUser(req, res, next) {
       data: null,
       error: null,
       message: _util_response.getResponse(88, req.headers.iso),
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+async function listSubcriptions(req, res, next) {
+  try {
+    let filters = {
+      subscriptionId: { $exists: true },
+    }
+
+    let users = await User.find(filters)
+      .lean()
+      .skip(req.skip)
+      .limit(req.query.limit)
+
+    return res.status(200).send({
+      success: 1,
+      data: { user: users },
+      error: null,
+      message: _util_response.getResponse(5, req.headers.iso),
+      paginate: await _util_response.responsePaginate(req, 'Users', filters),
     })
   } catch (error) {
     next(error)

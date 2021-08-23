@@ -70,6 +70,8 @@ router.get('/users/:id/list/card', isAuth, userCtrl.listCardsUser)
 router.put('/users/:id/update/card/:cardId', isAuth, userCtrl.updateCardUser)
 router.delete('/users/:id/delete/card/:cardId', isAuth, userCtrl.deleteCardUser)
 
+router.get('/users/subscriptions/all', isAuth, userCtrl.listSubcriptions)
+
 router.delete(
   '/users/:id/delete/subscription',
   isAuth,
