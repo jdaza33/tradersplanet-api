@@ -171,10 +171,11 @@ const checkPriceModel = (type, typeId, coupon) => {
 
       let model = await Model.findOne(
         { _id: typeId },
-        { _id: 1, name: 1, stripeId: 1, payments: 1, price: 1 }
+        { _id: 1, name: 1, stripeId: 1, payments: 1, price: 1, offprice: 1 }
       ).lean()
 
-      let price = model.price
+      let price =
+        model.offprice && model.offprice > 0 ? model.offprice : model.price
 
       //Obtenemos el precio segun el modelo
       // if (type == 'subscription') {
