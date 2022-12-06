@@ -43,7 +43,7 @@
     "nodemailer-sendgrid": "^1.0.3",
     "path": "^0.12.7",
     "promise-fs": "^2.1.1",
-    "qs": "^6.10.1",
+    "qs": "^6.10.3",
     "query-to-json": "0.0.2",
     "shelljs": "^0.8.3",
     "socket.io": "^2.3.0",
