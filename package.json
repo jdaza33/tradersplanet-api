@@ -23,7 +23,7 @@
     "discord.js": "^12.5.3",
     "dotenv": "^8.6.0",
     "ejs": "^3.0.2",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-paginate": "^1.0.2",
     "fs": "0.0.1-security",
     "fsp": "^0.1.2",
